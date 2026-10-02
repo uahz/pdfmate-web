@@ -1,0 +1,11 @@
+{
+  "appId": "com.pdfmate.app",
+  "appName": "PDFMate",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  },
+  "ios": {
+    "contentInset": "automatic"
+  }
+}
