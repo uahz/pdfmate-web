@@ -1,0 +1,17 @@
+{
+  "name": "PDFMate Web · PDF 全格式转换",
+  "short_name": "PDFMate",
+  "description": "图片转 PDF、PDF 转图片、多文件合并。全程浏览器本地处理，文件不上传。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FBFCFF",
+  "theme_color": "#4F6BFF",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
