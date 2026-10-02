@@ -26,6 +26,7 @@ jobs:
           cp -r icons www/icons
           npm install --no-audit --no-fund
           npx cap add ios
+          npx @capacitor/assets generate --ios --assetPath assets
           npx cap sync ios
 
       - name: CocoaPods install
