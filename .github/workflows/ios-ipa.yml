@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['index.html','app.js','theme.css','sw.js','manifest.webmanifest','capacitor.config.json','package.json','.github/workflows/ios-ipa.yml']
+    paths: ['index.html','app.js','theme.css','sw.js','manifest.webmanifest','capacitor.config.json','package.json','.github/workflows/ios-ipa.yml','assets/**']
 
 permissions:
   contents: write
