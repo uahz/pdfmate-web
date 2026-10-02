@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PDFMate Web · PDF 与图片互转、合并（全本地处理）</title>
+<meta name="description" content="PDFMate 网页版：图片转 PDF、PDF 转图片、多文件合并 PDF。全部在浏览器本地完成，文件不上传服务器。">
+<meta name="theme-color" content="#4F6BFF">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="theme.css">
+<style>
+/* 页面布局 */
+.nav{position:sticky;top:12px;z-index:50;margin:16px auto 0;max-width:1040px;display:flex;align-items:center;justify-content:space-between;
+  height:60px;padding:0 10px 0 18px;border-radius:999px;
+  background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  box-shadow:0 10px 30px rgba(15,23,42,.1),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 1px 1px rgba(255,255,255,.85)}
+.nav .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px}
+.nav .brand small{color:var(--ink3);font-weight:600;font-size:11px}
+.nav .links{display:flex;gap:8px;align-items:center}
+.nav .links .chip{border-radius:999px}
+.nav .dl{height:38px;padding:0 18px;font-size:13px;border-radius:999px}
+.hero{text-align:center;padding:44px 20px 30px}
+.hero .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);backdrop-filter:blur(12px) saturate(1.5);
+  border:1px solid rgba(255,255,255,.7);border-radius:999px;padding:8px 18px;font-size:13px;color:var(--ink2);box-shadow:0 6px 18px rgba(15,23,42,.08),inset 0 1px 1px rgba(255,255,255,.85)}
+.hero h1{font-size:34px;line-height:1.3;margin-top:18px}
+.hero h1 .g{background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin-top:12px;color:var(--ink2);font-size:14.5px}
+main{max-width:1040px;margin:0 auto;padding:6px 20px 30px}
+.tool{border-radius:var(--r-l);padding:22px;margin-bottom:18px}
+.tool[hidden]{display:none}
+.tool h2{font-size:16.5px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.tool .desc{font-size:12.5px;color:var(--ink3);margin-bottom:16px}
+.grid{display:flex;gap:16px;flex-wrap:wrap}
+.col{flex:1;min-width:260px}
+.pgroup>label{font-size:11.5px;font-weight:700;color:var(--ink2);letter-spacing:.5px;display:block;margin-bottom:8px}
+.drop{border:1.8px dashed rgba(129,152,255,.6);background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,.1));
+  border-radius:16px;padding:28px 18px;text-align:center;cursor:pointer;transition:all .15s}
+.drop.drag{border-color:var(--brand-500);background:linear-gradient(135deg,rgba(79,124,255,.14),rgba(124,92,255,.08))}
+.drop .ic{width:52px;height:52px;border-radius:16px;background:var(--brand-100);color:var(--brand-600);display:grid;place-items:center;margin:0 auto 10px}
+.drop b{font-size:14.5px;display:block}
+.drop small{font-size:12.5px;color:var(--ink3);display:block;margin-top:6px}
+.flist{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:320px;overflow:auto}
+.frow{display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid rgba(255,255,255,.7);border-radius:12px;background:rgba(255,255,255,.5)}
+.frow img.thumb{width:36px;height:36px;border-radius:8px;object-fit:cover;flex:none}
+.frow .fn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:min(300px,50vw)}
+.frow .fm{font-size:11px;color:var(--ink3);margin-top:2px}
+.frow .right{margin-left:auto;display:flex;align-items:center;gap:10px;flex:none}
+.link{font-size:12px;color:var(--brand-600);font-weight:600;cursor:pointer}
+.opts{display:flex;flex-direction:column;gap:14px}
+.toolact{margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.toolact .btn{height:46px;padding:0 26px;font-size:14.5px;border-radius:13px}
+.hint{font-size:12px;color:var(--ink3)}
+.note{margin-top:14px;padding:10px 14px;border-radius:12px;font-size:12.5px;color:var(--warn,#B45309);background:rgba(255,159,28,.12);box-shadow:inset 0 0 0 1px rgba(255,159,28,.35)}
+.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:99;width:min(420px,90vw)}
+.toast{padding:12px 16px;border-radius:14px;font-size:13px;background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);
+  box-shadow:var(--sh-2),inset 0 0 0 1px rgba(255,255,255,.6)}
+.toast b{display:block;margin-bottom:2px}
+.toast span{color:var(--ink2);font-size:12.5px}
+footer{max-width:1040px;margin:0 auto;padding:8px 20px 44px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--ink3)}
+.install-tip{margin:0 20px 18px;max-width:1000px}
+.install-tip .glass{border-radius:var(--r-m);padding:14px 18px;font-size:12.5px;color:var(--ink2);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+@media (max-width:640px){
+  html,body{overflow-x:hidden}
+  .hero h1{font-size:21px}
+  .hero p{font-size:13.5px}
+  .nav{height:54px;padding:0 6px 0 14px}
+  .nav .brand{font-size:15px}
+  .nav .brand small{display:none}
+  .nav .links{gap:4px}
+  .nav .links .chip{padding:7px 9px}
+  .nav .links .chip span{display:none}
+  .nav .dl{padding:0 12px;font-size:13px}
+  .dl-text{display:none}
+  .seg span{padding:7px 2px;font-size:12.5px}
+  .grid{flex-direction:column}
+  .tool{padding:16px}
+}
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="brand"><div class="logo">P</div>PDFMate <small>WEB</small></div>
+    <div class="links">
+      <span class="chip on" data-tool="img2pdf">🖼 <span>图片转 PDF</span></span>
+      <span class="chip" data-tool="pdf2img">📄 <span>PDF 转图片</span></span>
+      <span class="chip" data-tool="merge">📚 <span>合并 PDF</span></span>
+      <a class="btn btn-primary dl" id="dlDesktop" href="#" target="_blank" rel="noopener">⬇<span class="dl-text"> 桌面版</span></a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <span class="badge">🔒 全程浏览器本地处理 · 文件不上传任何服务器</span>
+    <h1>图片 ⇄ PDF、多文件合并<br><span class="g">打开即用，无需注册</span></h1>
+    <p>Word / Excel 转 PDF 需要更高质量引擎？<a href="#" id="dlDesktop2" target="_blank" rel="noopener" style="color:var(--brand-600);font-weight:600">下载 Windows 桌面版 →</a></p>
+  </header>
+
+  <main>
+    <!-- 图片转 PDF -->
+    <section class="tool glass" id="tool-img2pdf">
+      <h2>🖼 图片转 PDF</h2>
+      <p class="desc">JPG / PNG，多选；支持每图一个 PDF 或合并为一个 PDF。顺序即转换顺序。</p>
+      <div class="grid">
+        <div class="col">
+          <div class="drop" id="imgDrop">
+            <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V5M7.5 9.5 12 5l4.5 4.5"/><path d="M4 16v2.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V16"/></svg></div>
+            <b>拖入图片，或点击选择</b>
+            <small>JPG · PNG</small>
+          </div>
+          <input type="file" id="imgInput" multiple accept=".jpg,.jpeg,.png" hidden>
+          <div class="flist" id="imgList"></div>
+        </div>
+        <div class="col opts">
+          <div class="pgroup"><label>输出方式</label>
+            <div class="seg" id="imgMode"><span class="on" data-v="one">合并为一个 PDF</span><span data-v="each">每图一个 PDF</span></div>
+          </div>
+          <div class="pgroup"><label>页面尺寸</label>
+            <div class="seg" id="imgPage"><span class="on" data-v="auto">跟随原图</span><span data-v="a4">统一 A4</span></div>
+          </div>
+          <div class="toolact">
+            <button class="btn btn-primary" id="imgGo">转换为 PDF</button>
+            <span class="hint" id="imgHint"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PDF 转图片 -->
+    <section class="tool glass" id="tool-pdf2img" hidden>
+      <h2>📄 PDF 转图片</h2>
+      <p class="desc">在浏览器内逐页渲染为图片；DPI 可选，可打包 ZIP 一次性下载。</p>
+      <div class="grid">
+        <div class="col">
+          <div class="drop" id="pdfDrop">
+            <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h6l3 3v9H5z"/><path d="M11 3v3h3"/></svg></div>
+            <b>拖入 PDF，或点击选择</b>
+            <small>单文件 · 支持 encrypted 之外的标准 PDF</small>
+          </div>
+          <input type="file" id="pdfInput" accept=".pdf" hidden>
+          <div class="flist" id="pdfList"></div>
+        </div>
+        <div class="col opts">
+          <div class="pgroup"><label>输出质量</label>
+            <div class="seg" id="dpiSeg"><span data-v="96">标准 96</span><span class="on" data-v="150">高清 150</span><span data-v="300">超清 300</span></div>
+          </div>
+          <div class="pgroup"><label>图片格式</label>
+            <div class="seg" id="fmtSeg"><span class="on" data-v="png">PNG 无损</span><span data-v="jpeg">JPEG 更小</span></div>
+          </div>
+          <div class="pgroup"><label>打包下载</label>
+            <div class="seg" id="zipSeg"><span class="on" data-v="zip">ZIP 一次下载</span><span data-v="each">逐张下载</span></div>
+          </div>
+          <div class="pgroup"><label>页码范围（可选）</label>
+            <input id="pageRange" placeholder="如 1-3,5，留空=全部" style="width:100%;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.55);padding:0 12px;font-size:13px;outline:none">
+          </div>
+          <div class="toolact">
+            <button class="btn btn-primary" id="pdfGo">转为图片</button>
+            <span class="hint" id="pdfHint"></span>
+          </div>
+          <div class="progress" style="margin-top:10px;display:none" id="pdfProg"><i style="width:0%"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 合并 PDF -->
+    <section class="tool glass" id="tool-merge" hidden>
+      <h2>📚 合并 PDF</h2>
+      <p class="desc">把多个 PDF 与图片按顺序合并为一个 PDF（图片各占一页）。Word/Excel 请使用桌面版。</p>
+      <div class="grid">
+        <div class="col">
+          <div class="drop" id="mergeDrop">
+            <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 2.5 6.5 3.5L9 9.5 2.5 6z"/><path d="m4 8.8-1.5.9L9 13.5l6.5-3.8L14 8.8"/></svg></div>
+            <b>拖入 PDF / 图片，或点击选择</b>
+            <small>可调整顺序</small>
+          </div>
+          <input type="file" id="mergeInput" multiple accept=".pdf,.jpg,.jpeg,.png" hidden>
+          <div class="flist" id="mergeList"></div>
+        </div>
+        <div class="col opts">
+          <div class="pgroup"><label>合并后文件名</label>
+            <input id="mergeName" value="合并文档" style="width:100%;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.55);padding:0 12px;font-size:13px;outline:none">
+          </div>
+          <div class="toolact">
+            <button class="btn btn-primary" id="mergeGo">合并为一个 PDF</button>
+            <span class="hint" id="mergeHint"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="install-tip">
+    <div class="glass">📱 <b>安装到手机/电脑：</b>Android Chrome → 菜单「安装应用」；iPhone Safari → 分享 <span>⎋</span> 「添加到主屏幕」。安装后离线可用，同样全程本地处理。</div>
+  </div>
+
+  <footer>
+    <span>© 2026 PDFMate · 让格式转换不再是障碍</span>
+    <span>网页版 · 全本地处理 · 无服务器 · 无追踪</span>
+  </footer>
+
+  <div class="toasts" id="toasts"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
