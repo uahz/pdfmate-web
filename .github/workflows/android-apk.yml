@@ -31,6 +31,7 @@ jobs:
           cp -r icons www/icons
           npm install --no-audit --no-fund
           npx cap add android
+          npx @capacitor/assets generate --android --assetPath assets
           npx cap sync android
 
       - name: Build debug APK
