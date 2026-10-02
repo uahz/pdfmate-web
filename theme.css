@@ -1,0 +1,48 @@
+/* PDFMate Web · 设计令牌与液态玻璃（与四端统一） */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --brand-50:#EEF3FF;--brand-100:#DEE7FF;--brand-300:#A9BCFF;
+  --brand-500:#4F6BFF;--brand-600:#3D53E8;
+  --grad-brand:linear-gradient(135deg,#4F7CFF 0%,#6C5CFF 100%);
+  --pdf:#E5252A;--word:#2B6CD4;--excel:#1E9E6A;--ppt:#E8590C;--img:#8B5CF6;--merge:#0EA5E9;
+  --ok:#16A34A;--err:#E11D48;--queue:#64748B;
+  --ink:#0F172A;--ink2:#475569;--ink3:#94A3B8;
+  --line:#E6EAF2;--r-m:16px;--r-l:24px;
+  --sh-1:0 6px 20px rgba(15,23,42,.08);--sh-2:0 16px 44px rgba(15,23,42,.14);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Inter","HarmonyOS Sans SC","MiSans","PingFang SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,sans-serif;
+  color:var(--ink);background:#FBFCFF;min-height:100vh;
+  background-image:radial-gradient(760px 420px at 10% -4%,rgba(79,124,255,.16),transparent 60%),
+                   radial-gradient(760px 440px at 92% -2%,rgba(124,92,255,.14),transparent 60%),
+                   radial-gradient(700px 500px at -6% 46%,rgba(14,165,233,.11),transparent 62%),
+                   radial-gradient(760px 520px at 106% 60%,rgba(255,122,26,.07),transparent 62%),
+                   radial-gradient(900px 600px at 50% 108%,rgba(124,92,255,.13),transparent 65%);
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.glass{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);
+  box-shadow:var(--sh-1),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 1px 1px rgba(255,255,255,.85)}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--grad-brand);color:#fff;font-weight:800;display:grid;place-items:center;font-size:17px;box-shadow:0 6px 16px rgba(79,107,255,.4);flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-weight:600;border-radius:12px;font-family:inherit}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--grad-brand);color:#fff;box-shadow:0 10px 24px rgba(79,107,255,.38),inset 0 1.5px 1.5px rgba(255,255,255,.5),inset 0 -2px 3px rgba(10,15,60,.22)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:rgba(255,255,255,.5);color:var(--ink2);border:1px solid rgba(255,255,255,.7);-webkit-backdrop-filter:blur(10px) saturate(1.5);backdrop-filter:blur(10px) saturate(1.5);box-shadow:0 4px 14px rgba(15,23,42,.08),inset 0 1px 1px rgba(255,255,255,.8)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
+.pill.run{color:var(--brand-600);background:#E8EDFF}
+.pill.ok{color:var(--ok);background:#E8F7EE}
+.pill.queue{color:var(--queue);background:#EEF1F6}
+.pill.err{color:var(--err);background:#FDEBEF}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.progress{height:6px;border-radius:99px;background:rgba(15,23,42,.08);overflow:hidden}
+.progress>i{display:block;height:100%;border-radius:99px;background:var(--grad-brand);transition:width .2s}
+.seg{display:flex;background:rgba(241,244,251,.6);border-radius:11px;padding:4px;gap:4px}
+.seg span{flex:1;text-align:center;padding:7px 0;border-radius:8px;font-size:13px;color:var(--ink2);cursor:pointer}
+.seg .on{background:rgba(255,255,255,.92);color:var(--brand-600);font-weight:700;box-shadow:0 2px 8px rgba(15,23,42,.1)}
+.chip{font-size:12.5px;padding:7px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.7);color:var(--ink2);background:rgba(255,255,255,.45);cursor:pointer}
+.chip.on{border-color:transparent;background:var(--brand-50);color:var(--brand-600);font-weight:700;box-shadow:inset 0 0 0 1.5px var(--brand-300)}
+.tile{width:36px;height:36px;border-radius:10px;color:#fff;font-weight:800;display:grid;place-items:center;font-size:13px;flex:none}
+.tile.img{background:var(--img)}.tile.pdf{background:var(--pdf);font-size:9px}.tile.word{background:var(--word)}
