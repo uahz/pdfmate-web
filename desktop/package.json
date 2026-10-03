@@ -1,0 +1,47 @@
+{
+  "name": "pdfmate",
+  "productName": "PDFMate",
+  "version": "1.0.0",
+  "description": "PDFMate —— PDF 全格式转换工具（本地处理 · 文件不出电脑）",
+  "author": "PDFMate",
+  "license": "Proprietary",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "smoke": "electron . --smoke",
+    "ui": "electron . --demo-shot",
+    "postinstall": "node node_modules/electron/install.js",
+    "dist": "electron-builder --win"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "4.10.38"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.pdfmate.app",
+    "productName": "PDFMate",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**/*",
+      "renderer/**/*",
+      "engines/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ],
+      "icon": "build/icon.png"
+    }
+  }
+}
