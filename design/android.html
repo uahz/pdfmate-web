@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PDFMate · Android 端风格参考</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+.phones{display:flex;gap:46px;align-items:flex-start}
+.pcol{display:flex;flex-direction:column;align-items:center;gap:18px}
+.pcap{text-align:center}
+.pcap b{font-size:14.5px}
+.pcap span{display:block;font-size:12px;color:var(--ink3);margin-top:4px}
+/* M3 屏幕通用：动态色（薰衣草紫调） */
+.ascr{position:absolute;inset:0;display:flex;flex-direction:column;background:#F7F4FE;color:#1C1B1F;
+  background-image:radial-gradient(260px 300px at 90% 14%,rgba(124,92,255,.16),transparent 70%),
+                   radial-gradient(280px 320px at 6% 70%,rgba(79,124,255,.14),transparent 70%),
+                   radial-gradient(220px 260px at 94% 88%,rgba(20,184,166,.12),transparent 70%)}
+.ascr .statusbar{color:#1C1B1F;padding-top:14px}
+.atop{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 4px}
+.atop h2{font-size:21px;font-weight:500}
+.mavatar{width:34px;height:34px;border-radius:50%;background:#E2E7FF;color:#0B1A78;font-weight:700;display:grid;place-items:center;font-size:13px}
+.msearch{margin:10px 16px 0;height:46px;border-radius:23px;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),inset 0 1px 1px rgba(255,255,255,.8);display:flex;align-items:center;gap:10px;padding:0 16px;color:#5B5763;font-size:13.5px}
+.mchips{display:flex;gap:8px;padding:12px 16px 4px;overflow:hidden}
+.mchip{font-size:12.5px;padding:7px 14px;border-radius:9px;border:1px solid rgba(202,196,208,.7);color:#49454F;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);white-space:nowrap}
+.mchip.on{background:rgba(79,107,255,.16);border:1px solid rgba(79,107,255,.3);color:#1D25C4;font-weight:600}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px 0}
+.mcard{background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);border-radius:18px;padding:14px;box-shadow:0 4px 14px rgba(28,27,31,.08),inset 0 0 0 1px rgba(255,255,255,.55),inset 0 1px 1px rgba(255,255,255,.8)}
+.micon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px}
+.mcard b{display:block;font-size:13.5px;margin-top:10px;font-weight:600}
+.mcard small{display:block;font-size:11px;color:#5B5763;margin-top:3px}
+.mnav{position:absolute;left:14px;right:14px;bottom:22px;display:flex;padding:9px 10px;border-radius:999px;z-index:70}
+.mn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;color:#5B5763}
+.mn .ic{padding:3px 20px;border-radius:14px}
+.mn.on{color:#1D25C4;font-weight:600}
+.mn.on .ic{background:rgba(79,107,255,.18)}
+.gesture{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:104px;height:4px;border-radius:99px;background:#1C1B1F;opacity:.85;z-index:60}
+/* 屏2 批量选择 */
+.mcount{margin:8px 16px 0;display:inline-flex;align-items:center;gap:8px;background:rgba(79,107,255,.16);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#0B1A78;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:99px;box-shadow:inset 0 0 0 1px rgba(79,107,255,.2)}
+.mlist{margin:12px 16px 0;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);border-radius:20px;padding:4px 16px;box-shadow:0 4px 14px rgba(28,27,31,.08),inset 0 0 0 1px rgba(255,255,255,.55),inset 0 1px 1px rgba(255,255,255,.8)}
+.mrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #F2EEF8}
+.mrow:last-child{border-bottom:none}
+.mrow b{font-size:13.5px;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.mrow small{display:block;font-size:11px;color:#5B5763;margin-top:2px}
+.mck{width:21px;height:21px;border-radius:6px;border:2px solid #79747E;flex:none;margin-left:auto}
+.mck.on{border:none;background:#4A56E2;display:grid;place-items:center;color:#fff}
+.mbar{position:absolute;left:14px;right:14px;bottom:22px;border-radius:999px;display:flex;align-items:center;gap:14px;padding:9px 9px 9px 20px;z-index:70}
+.mbar .info b{font-size:14px;display:block}
+.mbar .info small{font-size:11.5px;color:#5B5763}
+.mbtn{margin-left:auto;height:46px;padding:0 26px;border-radius:23px;font-size:14.5px}
+/* 屏3 进度 */
+.mprog{margin:12px 16px 0}
+.mprog .track{height:8px;border-radius:99px;background:rgba(28,27,31,.08);overflow:hidden}
+.mprog .track i{display:block;height:100%;width:65%;border-radius:99px;background:#4A56E2}
+.mprog .lbl{display:flex;justify-content:space-between;font-size:12px;color:#5B5763;margin-top:6px}
+.mstat{margin:12px 16px 0;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 14px rgba(28,27,31,.08),inset 0 0 0 1px rgba(255,255,255,.55),inset 0 1px 1px rgba(255,255,255,.8)}
+.sticon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none}
+.sticon.ok{background:#E3F6ED;color:#1E9E6A}
+.sticon.run{background:#E2E7FF;color:#4A56E2}
+.sticon.wait{background:#FEF3DE;color:#B45309}
+.snack{position:absolute;left:14px;right:14px;bottom:24px;color:#E6E1E9;border-radius:999px;padding:13px 18px;display:flex;align-items:center;font-size:12.5px;z-index:70}
+.snack span{color:#D0BCFF;font-weight:600;margin-left:auto;padding-left:14px;white-space:nowrap}
+</style>
+</head>
+<body class="stage light">
+  <!-- 液态玻璃透镜折射滤镜：R 通道驱动横向位移，G 通道驱动纵向位移；中性值 128 = 不位移 -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <filter id="lgl" x="-15%" y="-55%" width="130%" height="210%" color-interpolation-filters="sRGB">
+      <feImage href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='302' height='60'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='rgb(0,128,128)'/%3E%3Cstop offset='0.1' stop-color='rgb(128,128,128)'/%3E%3Cstop offset='0.9' stop-color='rgb(128,128,128)'/%3E%3Cstop offset='1' stop-color='rgb(255,128,128)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='302' height='60' fill='url(%23g)'/%3E%3C/svg%3E" x="0" y="0" width="302" height="60" preserveAspectRatio="none" result="mx"/>
+      <feDisplacementMap in="SourceGraphic" in2="mx" scale="11" xChannelSelector="R" yChannelSelector="G" result="dx"/>
+      <feImage href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='302' height='60'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='rgb(128,0,128)'/%3E%3Cstop offset='0.12' stop-color='rgb(128,128,128)'/%3E%3Cstop offset='0.88' stop-color='rgb(128,128,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,255,128)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='302' height='60' fill='url(%23g)'/%3E%3C/svg%3E" x="0" y="0" width="302" height="60" preserveAspectRatio="none" result="my"/>
+      <feDisplacementMap in="dx" in2="my" scale="7.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs></svg>
+  <header class="stage-head">
+    <div>
+      <h1>Android 端 · 核心三屏</h1>
+      <p>Material 3 · 动态配色 + 液态玻璃悬浮 Dock · 390×844 基准</p>
+    </div>
+    <a class="back" href="index.html">← 返回总览</a>
+  </header>
+
+  <div class="phones">
+    <!-- 屏1 首页 -->
+    <div class="pcol">
+      <div class="phone">
+        <div class="punch"></div>
+        <div class="screen"><div class="ascr">
+          <div class="statusbar"><span>9:41</span><span class="sicons"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="batt"></span></span></div>
+          <div class="atop"><h2>PDFMate</h2><div class="mavatar">智</div></div>
+          <div class="msearch"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="8" r="5.2"/><path d="m12 12 3.5 3.5"/></svg>搜索文件或功能…</div>
+          <div class="mchips">
+            <span class="mchip on">全部</span><span class="mchip">文档</span><span class="mchip">表格</span><span class="mchip">图片</span><span class="mchip">合并</span>
+          </div>
+          <div class="mgrid">
+            <div class="mcard"><div class="micon" style="background:var(--word)">W</div><b>Word 转 PDF</b><small>版式还原 · 支持批量</small></div>
+            <div class="mcard"><div class="micon" style="background:var(--excel)">X</div><b>Excel 转 PDF</b><small>自动识别打印区域</small></div>
+            <div class="mcard"><div class="micon" style="background:var(--img)">图</div><b>图片转 PDF</b><small>多图排序 · 压缩可控</small></div>
+            <div class="mcard"><div class="micon" style="background:var(--merge)">合</div><b>合并 PDF</b><small>混合格式 · 自动书签</small></div>
+            <div class="mcard"><div class="micon" style="background:var(--pdf);font-size:9.5px">PDF</div><b>PDF 转 Word</b><small>扫描件 OCR 识别</small></div>
+            <div class="mcard"><div class="micon" style="background:#5B5763">⋯</div><b>更多工具</b><small>压缩 · 拆分 · 加密</small></div>
+            <div class="mcard"><div class="micon" style="background:var(--excel)">X</div><b>PDF 转 Excel</b><small>表格跨页合并</small></div>
+            <div class="mcard"><div class="micon" style="background:var(--pdf);font-size:9.5px">PDF</div><b>压缩 PDF</b><small>图像重采样降体积</small></div>
+          </div>
+          <div class="mnav lglass">
+            <div class="mn on"><span class="ic"><svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="2"/><rect x="12" y="3.5" width="6.5" height="6.5" rx="2"/><rect x="3.5" y="12" width="6.5" height="6.5" rx="2"/><rect x="12" y="12" width="6.5" height="6.5" rx="2"/></svg></span>首页</div>
+            <div class="mn"><span class="ic"><svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l2.5 1.5"/></svg></span>任务</div>
+            <div class="mn"><span class="ic"><svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="14" height="14" rx="3"/><path d="M8 12l2.5 2.5L15.5 9"/></svg></span>工具</div>
+            <div class="mn"><span class="ic"><svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="8" r="3.4"/><path d="M4.5 18.5c1.2-3 3.6-4.5 6.5-4.5s5.3 1.5 6.5 4.5"/></svg></span>我的</div>
+          </div>
+          <div class="gesture"></div>
+        </div></div>
+      </div>
+      <div class="pcap"><b>① 首页 · 动态色卡片</b><span>搜索 + 筛选 Chips · 液态玻璃悬浮导航</span></div>
+    </div>
+
+    <!-- 屏2 批量选择 -->
+    <div class="pcol">
+      <div class="phone">
+        <div class="punch"></div>
+        <div class="screen"><div class="ascr">
+          <div class="statusbar"><span>9:41</span><span class="sicons"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="batt"></span></span></div>
+          <div class="atop" style="padding-bottom:8px"><h2 style="font-size:18px;display:flex;align-items:center;gap:10px"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12.5 4 6.5 10l6 6"/></svg>选择文件</h2><svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10" cy="4" r="1.4"/><circle cx="10" cy="10" r="1.4"/><circle cx="10" cy="16" r="1.4"/></svg></div>
+          <div style="padding:0 16px"><span class="mcount">已选 7 个 · 约 19.1 MB</span></div>
+          <div class="mlist">
+            <div class="mrow"><div class="tile sm word" style="width:36px;height:36px;border-radius:10px">W</div><div><b>2026年度营销预算报告.docx</b><small>2.4 MB · 12 页</small></div><span class="mck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+            <div class="mrow"><div class="tile sm excel" style="width:36px;height:36px;border-radius:10px">X</div><div><b>Q3销售明细表.xlsx</b><small>1.2 MB · 3 个工作表</small></div><span class="mck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+            <div class="mrow"><div class="tile sm ppt" style="width:36px;height:36px;border-radius:10px">P</div><div><b>客户提案_终版.pptx</b><small>8.1 MB · 24 页</small></div><span class="mck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+            <div class="mrow"><div class="tile sm img" style="width:36px;height:36px;border-radius:10px">图</div><div><b>扫描件_租赁合同.jpg</b><small>4.6 MB · 1 页</small></div><span class="mck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+            <div class="mrow"><div class="tile sm img" style="width:36px;height:36px;border-radius:10px">图</div><div><b>发票_0901.jpg</b><small>1.1 MB · 1 页</small></div><span class="mck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+            <div class="mrow"><div class="tile sm img" style="width:36px;height:36px;border-radius:10px">图</div><div><b>发票_0902.jpg</b><small>0.8 MB · 1 页</small></div><span class="mck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+            <div class="mrow"><div class="tile sm img" style="width:36px;height:36px;border-radius:10px">图</div><div><b>收据_1001.jpg</b><small>0.9 MB · 1 页</small></div><span class="mck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+          </div>
+          <div class="mbar lglass">
+            <div class="info"><b>统一转为 PDF</b><small>输出到 Documents/PDFMate</small></div>
+            <button class="btn btn-primary mbtn">开始转换</button>
+          </div>
+          <div class="gesture"></div>
+        </div></div>
+      </div>
+      <div class="pcap"><b>② 批量选择页</b><span>Material 勾选 · 液态玻璃悬浮操作 Dock</span></div>
+    </div>
+
+    <!-- 屏3 转换进度 -->
+    <div class="pcol">
+      <div class="phone">
+        <div class="punch"></div>
+        <div class="screen"><div class="ascr">
+          <div class="statusbar"><span>9:41</span><span class="sicons"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="batt"></span></span></div>
+          <div class="atop" style="padding-bottom:8px"><h2 style="font-size:18px;display:flex;align-items:center;gap:10px"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12.5 4 6.5 10l6 6"/></svg>转换任务</h2><svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10" cy="4" r="1.4"/><circle cx="10" cy="10" r="1.4"/><circle cx="10" cy="16" r="1.4"/></svg></div>
+          <div class="mprog">
+            <div class="track"><i></i></div>
+            <div class="lbl"><span>总进度 65% · 12.4 页/秒</span><span>预计还需 00:12</span></div>
+          </div>
+          <div class="mstat">
+            <span class="sticon run"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 4v6l3.5 2" stroke-linecap="round"/></svg></span>
+            <div><b style="font-size:13.5px;font-weight:600">客户提案_终版.pptx</b><small style="display:block;font-size:11px;color:#5B5763;margin-top:2px">转换中 · 第 16/24 页</small></div>
+          </div>
+          <div class="mstat" style="margin-top:10px">
+            <span class="sticon ok"><svg width="17" height="17" viewBox="0 0 20 20"><path d="m4.5 10.5 3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+            <div><b style="font-size:13.5px;font-weight:600">2026年度营销预算报告.pdf</b><small style="display:block;font-size:11px;color:#5B5763;margin-top:2px">完成 · 1.8s · 已保存</small></div>
+          </div>
+          <div class="mstat" style="margin-top:10px">
+            <span class="sticon ok"><svg width="17" height="17" viewBox="0 0 20 20"><path d="m4.5 10.5 3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+            <div><b style="font-size:13.5px;font-weight:600">Q3销售明细表.pdf</b><small style="display:block;font-size:11px;color:#5B5763;margin-top:2px">完成 · 3 个工作表</small></div>
+          </div>
+          <div class="mstat" style="margin-top:10px">
+            <span class="sticon wait"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7"/><path d="M10 6.5V10l2.5 1.5"/></svg></span>
+            <div><b style="font-size:13.5px;font-weight:600">产品白皮书.pdf</b><small style="display:block;font-size:11px;color:#5B5763;margin-top:2px">等待中 · 队列第 3 位</small></div>
+          </div>
+          <div class="snack lglass dark">✓ 全部转换完成<span>打开目录</span></div>
+          <div class="gesture"></div>
+        </div></div>
+      </div>
+      <div class="pcap"><b>③ 转换进度页</b><span>LinearProgress + 状态列表 · 液态玻璃 Snackbar</span></div>
+    </div>
+  </div>
+
+  <p class="stage-note">高保真静态参考 · 非最终视觉稿 · PDFMate Design Preview v0.1</p>
+</body>
+</html>
