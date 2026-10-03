@@ -188,6 +188,92 @@ class Queue extends EventEmitter {
           this.on('render-done', h);
         });
       }
+    } else if (batch.mode === 'to-docx' || batch.mode === 'compress') {
+      // 渲染端驱动：PDF→Word（文本提取+docx 生成）/ PDF 压缩（渲染重编码）
+      for (const j of jobs.filter(j => j.status === 'queued')) {
+        j.status = 'await-render';
+        j.engine = batch.mode === 'to-docx' ? 'pdf.js + docx' : 'pdf.js 重压缩';
+        this._emit();
+        this.emit('render-request', { job: j, batch });
+        await new Promise((resolve) => {
+          const h = (data) => {
+            if (data.jobId !== j.id) return;
+            this.removeListener('render-done', h);
+            resolve();
+          };
+          this.on('render-done', h);
+        });
+      }
+    } else if (batch.mode === 'split') {
+      await this._runSplit(batch);
+    }
+  }
+
+  // 拆分：每页一个 / 每 N 页 / 自定义范围（主进程 pdf-lib 直出）
+  async _runSplit(batch) {
+    const { PDFDocument } = require('pdf-lib');
+    const jobs = batch.jobs.filter(j => j.status === 'queued');
+    if (!jobs.length) return;
+    for (const j of jobs) { j.status = 'running'; j.engine = 'pdf-lib'; j.startedAt = Date.now(); }
+    this._emit();
+    for (const j of jobs) {
+      try {
+        if (this.cancelAllFlag) throw new Error('CANCELED');
+        const bytes = new Uint8Array(fs.readFileSync(j.src));
+        const src = await PDFDocument.load(bytes);
+        const total = src.getPageCount();
+        const mode = batch.params.splitMode || 'each';
+        const every = Math.max(1, parseInt(batch.params.splitEvery, 10) || 1);
+        let groups = [];
+        if (mode === 'each') {
+          groups = Array.from({ length: total }, (_, i) => [i + 1]);
+        } else if (mode === 'every') {
+          for (let s = 1; s <= total; s += every) {
+            const e = Math.min(s + every - 1, total);
+            const arr = []; for (let i = s; i <= e; i++) arr.push(i);
+            groups.push(arr);
+          }
+        } else {
+          const spec = batch.params.splitRanges || '';
+          if (!spec.trim()) throw new Error('自定义范围为空');
+          groups = spec.split(',').map(s => s.trim()).filter(Boolean).map(seg => {
+            const m = seg.match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+            if (!m) throw new Error('拆分范围格式不正确：' + seg);
+            let a = parseInt(m[1], 10), b = m[2] ? parseInt(m[2], 10) : a;
+            if (a < 1 || b < a) throw new Error('拆分范围不正确：' + seg);
+            b = Math.min(b, total);
+            const arr = []; for (let i = a; i <= b; i++) arr.push(i);
+            return arr;
+          });
+        }
+        const dir = this._outDirFor(batch, j.src);
+        ensureDir(dir);
+        const base = path.basename(j.src, path.extname(j.src));
+        const outs = [];
+        for (let gi = 0; gi < groups.length; gi++) {
+          if (this.cancelAllFlag) throw new Error('CANCELED');
+          const out = await PDFDocument.create();
+          const pages = await out.copyPages(src, groups[gi].map(n => n - 1));
+          pages.forEach(p => out.addPage(p));
+          const buf = await out.save();
+          const dest = uniquePath(path.join(dir, base + '_part' + String(gi + 1).padStart(2, '0') + '.pdf'));
+          fs.writeFileSync(dest, Buffer.from(buf));
+          outs.push(dest);
+          j.progress = (gi + 1) / groups.length;
+          this._emit();
+        }
+        j.outPath = outs[0];
+        j.status = 'done';
+        j.progress = 1;
+        j.pages = outs.length;
+        j.finishedAt = Date.now();
+      } catch (e) {
+        const msg = String(e && e.message || e) === 'CANCELED' ? '已取消' : String(e && e.message || e);
+        j.status = msg === '已取消' ? 'canceled' : 'error';
+        j.error = msg;
+        j.finishedAt = Date.now();
+      }
+      this._emit();
     }
   }
 
