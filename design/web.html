@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PDFMate · 网页端风格参考</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+body{background:#FBFCFF;
+  background-image:radial-gradient(760px 420px at 10% -4%,rgba(79,124,255,.16),transparent 60%),
+                   radial-gradient(760px 440px at 92% -2%,rgba(124,92,255,.14),transparent 60%),
+                   radial-gradient(700px 500px at -6% 42%,rgba(14,165,233,.12),transparent 62%),
+                   radial-gradient(720px 520px at 106% 52%,rgba(255,122,26,.08),transparent 62%),
+                   radial-gradient(900px 600px at 50% 108%,rgba(124,92,255,.14),transparent 65%)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+/* 导航：悬浮玻璃胶囊 */
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;margin-top:16px;padding:0 10px 0 22px;border-radius:999px;background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);box-shadow:0 10px 30px rgba(15,23,42,.1),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 1px 1px rgba(255,255,255,.85)}
+.nav .links{display:flex;gap:30px;font-size:14px;color:var(--ink2)}
+.nav .links a.on{color:var(--brand-600);font-weight:700}
+.nav .r{display:flex;align-items:center;gap:16px;font-size:14px}
+.nav .btn{height:38px;padding:0 20px;font-size:13.5px}
+.brandline{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+/* Hero */
+.hero{text-align:center;padding:64px 0 40px}
+.hero .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);backdrop-filter:blur(12px) saturate(1.5);border:1px solid rgba(255,255,255,.7);border-radius:999px;padding:8px 18px;font-size:13px;color:var(--ink2);box-shadow:0 6px 18px rgba(15,23,42,.08),inset 0 1px 1px rgba(255,255,255,.85)}
+.hero h1{font-size:46px;line-height:1.25;letter-spacing:.5px;margin-top:22px}
+.hero h1 .g{background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:16.5px;color:var(--ink2);margin-top:16px;line-height:1.8}
+.hero .ctas{display:flex;gap:14px;justify-content:center;margin-top:28px}
+.hero .ctas .btn{height:48px;padding:0 30px;font-size:15px;border-radius:14px}
+.hero .meta{margin-top:16px;font-size:12.5px;color:var(--ink3)}
+/* 上传卡 */
+.upzone{max-width:880px;margin:26px auto 0;background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);border-radius:var(--r-l);box-shadow:var(--sh-2),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 1.5px 1.5px rgba(255,255,255,.85);padding:26px 28px}
+.upzone .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.upzone .head b{font-size:16px}
+.upzone .head span{font-size:12.5px;color:var(--ink3)}
+.bigdrop{border:1.8px dashed rgba(129,152,255,.6);background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,.1));border-radius:18px;padding:34px 20px 30px;text-align:center}
+.bigdrop .ic{width:64px;height:64px;border-radius:20px;background:var(--brand-100);color:var(--brand-600);display:grid;place-items:center;margin:0 auto 14px}
+.bigdrop b{font-size:16px;display:block}
+.bigdrop small{font-size:13px;color:var(--ink3);display:block;margin-top:8px}
+.fmtgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.fmt{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.5);border-radius:12px;padding:10px 12px}
+.fmt .arrow{color:var(--ink3);font-size:13px}
+.fmt span{font-size:12.5px;font-weight:600;color:var(--ink2)}
+/* 特性 */
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:52px auto 0}
+.feat{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);border-radius:20px;padding:24px;box-shadow:var(--sh-1),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 1px 1px rgba(255,255,255,.85)}
+.feat .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px}
+.feat h3{font-size:15.5px;margin-bottom:8px}
+.feat p{font-size:13px;color:var(--ink2);line-height:1.75}
+.ic.blue{background:var(--brand-100);color:var(--brand-600)}
+.ic.green{background:#E3F6ED;color:var(--excel)}
+.ic.violet{background:#EFE9FE;color:var(--img)}
+/* 四端带 */
+.quad{margin:52px 0 0;background:linear-gradient(135deg,rgba(16,26,58,.72),rgba(10,16,40,.58));-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);border-radius:var(--r-l);padding:34px 40px;display:flex;align-items:center;justify-content:space-between;color:#fff;box-shadow:0 20px 50px rgba(10,16,40,.35),inset 0 0 0 1px rgba(255,255,255,.16),inset 0 1.5px 1.5px rgba(255,255,255,.28)}
+.quad h3{font-size:19px}
+.quad p{font-size:13px;color:#9FB0DC;margin-top:8px}
+.quad .badges{display:flex;gap:12px}
+.qb{background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 18px;font-size:13px;font-weight:600;text-align:center}
+.qb small{display:block;font-weight:400;color:#9FB0DC;margin-top:4px;font-size:11.5px}
+/* 页脚 */
+footer{margin-top:56px;border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- 顶部导航 -->
+  <nav class="nav">
+    <div class="brandline"><div class="logo">P</div>PDFMate</div>
+    <div class="links"><a class="on" href="#">功能</a><a href="#">批量转换</a><a href="#">企业版 API</a><a href="#">定价</a><a href="#">帮助中心</a></div>
+    <div class="r"><a href="#">登录</a><button class="btn btn-primary">免费使用</button></div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="badge">🔒 全程本地处理 · 文件不上传 · 24 小时自动删除</span>
+    <h1>PDF 与 Word / Excel / 图片<br><span class="g">双向转换，一站搞定</span></h1>
+    <p class="sub">无需注册，打开即用；批量任务、扫描件 OCR、多格式合并，全部在一个工作台完成。</p>
+    <div class="ctas">
+      <button class="btn btn-primary">免费开始转换</button>
+      <button class="btn btn-ghost">下载桌面版（无大小限制）</button>
+    </div>
+    <div class="meta">单文件 ≤50MB / 100 页 · 会员 ≤500MB · 支持 Chrome / Edge / Safari</div>
+  </section>
+
+  <!-- 上传工作区 -->
+  <section class="upzone">
+    <div class="head"><b>上传文件开始转换</b><span>已用 3 / 10 次今日免费额度</span></div>
+    <div class="bigdrop">
+      <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V5M7.5 9.5 12 5l4.5 4.5"/><path d="M4 16v2.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V16"/></svg></div>
+      <b>拖入文件，或点击上传</b>
+      <small>转换过程在浏览器与云端沙箱完成，文件与产物 24 小时后自动删除</small>
+    </div>
+    <div class="fmtgrid">
+      <div class="fmt"><div class="tile sm word">W</div><span class="arrow">→</span><div class="tile sm pdf">PDF</div><span>Word 转 PDF</span></div>
+      <div class="fmt"><div class="tile sm excel">X</div><span class="arrow">→</span><div class="tile sm pdf">PDF</div><span>Excel 转 PDF</span></div>
+      <div class="fmt"><div class="tile sm img">图</div><span class="arrow">→</span><div class="tile sm pdf">PDF</div><span>图片转 PDF</span></div>
+      <div class="fmt"><div class="tile sm merge">合</div><span class="arrow">→</span><div class="tile sm pdf">PDF</div><span>多格式合并</span></div>
+      <div class="fmt"><div class="tile sm pdf">PDF</div><span class="arrow">→</span><div class="tile sm word">W</div><span>PDF 转 Word</span></div>
+      <div class="fmt"><div class="tile sm pdf">PDF</div><span class="arrow">→</span><div class="tile sm excel">X</div><span>PDF 转 Excel</span></div>
+      <div class="fmt"><div class="tile sm pdf">PDF</div><span class="arrow">→</span><div class="tile sm img">图</div><span>PDF 转图片</span></div>
+      <div class="fmt"><div class="tile sm more">⋯</div><span>压缩 · 拆分 · OCR</span></div>
+    </div>
+  </section>
+
+  <!-- 特性 -->
+  <section class="feats">
+    <div class="feat">
+      <div class="ic blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4.5"/></svg></div>
+      <h3>本地级隐私安全</h3>
+      <p>桌面版全程离线转换，文件不出电脑；网页版沙箱隔离，24 小时自动清除，永不用于训练。</p>
+    </div>
+    <div class="feat">
+      <div class="ic green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 2.5 6.5 3.5L9 9.5 2.5 6z"/><path d="m4 8.8-1.5.9L9 13.5l6.5-3.8L14 8.8"/><path d="m4 12.8-1.5.9L9 17.5l6.5-3.8L14 12.8"/></svg></div>
+      <h3>批量 + 队列化引擎</h3>
+      <p>整个文件夹拖入即转，多进程并发调度；失败自动重试，任务报告一目了然。</p>
+    </div>
+    <div class="feat">
+      <div class="ic violet"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="9" cy="9.5" r="2"/><path d="m4.5 17.5 4.5-4 3.5 3 3-2.5 4 3.5"/></svg></div>
+      <h3>300DPI 高清输出</h3>
+      <p>DPI 分档可控，图片默认无损嵌入；版面还原度经 200 份文档回归测试集验证。</p>
+    </div>
+  </section>
+
+  <!-- 四端覆盖 -->
+  <section class="quad">
+    <div>
+      <h3>一套账号，四端接力</h3>
+      <p>PC 端处理大文件与批量任务，移动端随手查看与分享，任务记录云端同步。</p>
+    </div>
+    <div class="badges">
+      <div class="qb">🖥 PC 桌面版<small>Windows / macOS</small></div>
+      <div class="qb">📱 iOS App<small>App Store</small></div>
+      <div class="qb">🤖 Android App<small>Google Play / 应用宝</small></div>
+      <div class="qb">🌐 网页版<small>免安装即用</small></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 PDFMate · 让格式转换不再是障碍</span>
+    <span>网页端风格参考 · Design Preview v0.1</span>
+  </footer>
+</div>
+</body>
+</html>
