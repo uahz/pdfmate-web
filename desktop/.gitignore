@@ -1,0 +1,5 @@
+node_modules/
+release/
+smoke-report.json
+ui-preview.png
+*.log
