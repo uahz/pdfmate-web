@@ -1,5 +1,5 @@
 /* PDFMate Web Service Worker：缓存应用外壳与转换库，离线可用 */
-const CACHE = 'pdfmate-web-v1';
+const CACHE = 'pdfmate-web-v1.3';
 const ASSETS = [
   './',
   './index.html',
@@ -12,7 +12,8 @@ const ASSETS = [
   'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js',
   'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',
   'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js',
-  'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js'
+  'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js',
+  'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js'
 ];
 
 self.addEventListener('install', (e) => {
