@@ -28,10 +28,11 @@ jobs:
           npx cap add ios
           npx cap sync ios
 
-      - name: Brand AppIcon (overwrite template pair)
+      - name: Brand AppIcon (single-size 1024)
         run: |
-          cp "assets/ios/AppIcon60x60@2x.png" "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon60x60@2x.png"
-          cp "assets/ios/AppIcon76x76@2x~ipad.png" "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon76x76@2x~ipad.png"
+          rm -f ios/App/App/Assets.xcassets/AppIcon.appiconset/*.png
+          cp assets/ios/AppIcon-1024.png ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          cp assets/ios/AppIcon-Contents.json ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json
 
       - name: CocoaPods install
         run: |
