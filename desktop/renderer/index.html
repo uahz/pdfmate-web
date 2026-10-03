@@ -8,7 +8,7 @@
 </head>
 <body>
   <div id="titlebar">
-    <div class="tb-left"><div class="logo">P</div>PDFMate<small>格式转换工具 v1.0</small></div>
+    <div class="tb-left"><div class="logo">P</div>PDFMate<small>格式转换工具 v1.3</small></div>
     <div class="win-btns">
       <span id="btnMin"><svg width="12" height="12" viewBox="0 0 12 12"><line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1.4"/></svg></span>
       <span id="btnMax"><svg width="12" height="12" viewBox="0 0 12 12"><rect x="1.7" y="1.7" width="8.6" height="8.6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></span>
@@ -68,10 +68,13 @@
         <aside id="params">
           <div class="pgroup">
             <label>转换模式</label>
-            <div class="seg" id="modeSeg">
+            <div class="modegrid" id="modeSeg">
               <span class="on" data-mode="to-pdf">转为 PDF</span>
               <span data-mode="pdf2img">PDF 转图片</span>
+              <span data-mode="to-docx">PDF 转 Word</span>
               <span data-mode="merge">合并 PDF</span>
+              <span data-mode="split">拆分 PDF</span>
+              <span data-mode="compress">压缩 PDF</span>
             </div>
           </div>
           <div class="pgroup">
@@ -81,6 +84,29 @@
               <span class="chip" data-preset="archive">归档版 · 300DPI</span>
               <span class="chip" data-preset="min">最小体积</span>
             </div>
+          </div>
+          <div class="pgroup" id="docxGroup" style="display:none">
+            <label>还原说明</label>
+            <div class="hintbox">数字版 PDF：文本按行/段落还原，保留字号层级。<br>扫描件 OCR 还原将在 v2.0 提供。</div>
+          </div>
+          <div class="pgroup" id="splitGroup" style="display:none">
+            <label>拆分方式</label>
+            <div class="seg" id="splitSeg" style="margin-bottom:10px">
+              <span class="on" data-v="each">每页一个</span>
+              <span data-v="every">每 N 页一份</span>
+              <span data-v="ranges">自定义范围</span>
+            </div>
+            <input id="splitEvery" placeholder="每份页数 N（默认 1）" style="width:100%;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.5);padding:0 10px;font-size:12.5px;outline:none;display:none;margin-bottom:8px">
+            <input id="splitRanges" placeholder="范围，如 1-3,5-8,9-" style="width:100%;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.5);padding:0 10px;font-size:12.5px;outline:none;display:none">
+          </div>
+          <div class="pgroup" id="compressGroup" style="display:none">
+            <label>压缩档位</label>
+            <div class="seg" id="compSeg">
+              <span data-v="high">高质量</span>
+              <span class="on" data-v="standard">标准</span>
+              <span data-v="min">最小体积</span>
+            </div>
+            <div class="hintbox" style="margin-top:8px">逐页重编码为 JPEG 图像后重建 PDF；档位越高越清晰、体积越大。</div>
           </div>
           <div class="pgroup" id="pdf2imgGroup" style="display:none">
             <label>图片输出</label>
@@ -159,6 +185,8 @@
   <input type="file" id="fileInput" multiple style="display:none"
     accept=".docx,.doc,.rtf,.txt,.xlsx,.xls,.csv,.pptx,.ppt,.pps,.ppsx,.jpg,.jpeg,.png,.pdf">
 
+  <script src="../node_modules/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="../node_modules/docx/build/index.umd.js"></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>
