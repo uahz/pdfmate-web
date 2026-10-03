@@ -1,5 +1,6 @@
 'use strict';
 import { runPdf2Img } from './pdf2img.js';
+import { pdfToDocxBlob, compressPdfToBlob } from './word-compress.js';
 
 const $ = (s) => document.querySelector(s);
 // 浏览器直开（无 Electron preload）时提供演示桩，便于 UI 预览/截图
@@ -158,6 +159,9 @@ function tileLabel(name) {
 }
 function modeHint(kind) {
   if (state.mode === 'pdf2img') return 'PDF → 图片';
+  if (state.mode === 'to-docx') return 'PDF → Word（数字版文本还原）';
+  if (state.mode === 'split') return kind === 'pdf' ? '拆分为多个 PDF' : '';
+  if (state.mode === 'compress') return kind === 'pdf' ? '压缩为更小的 PDF' : '';
   if (state.mode === 'merge') return kind === 'office' ? '引擎转 PDF 后合并' : kind === 'image' ? '作为一页并入' : '直接并入';
   return kind === 'office' ? (state.engine === 'office' ? 'Office 引擎 → PDF' : 'LibreOffice → PDF') : '图片 → PDF';
 }
@@ -196,19 +200,39 @@ $('#modeSeg').addEventListener('click', (e) => {
   if (!t) return;
   state.mode = t.dataset.mode;
   $('#modeSeg').querySelectorAll('span').forEach(s => s.classList.toggle('on', s === t));
-  const pdf2imgMode = state.mode === 'pdf2img';
-  $('#pdf2imgGroup').style.display = pdf2imgMode ? '' : 'none';
-  $('#pageSizeGroup').style.display = pdf2imgMode ? 'none' : '';
+  const pdfOnly = ['pdf2img', 'to-docx', 'split', 'compress'].includes(state.mode);
+  $('#pdf2imgGroup').style.display = state.mode === 'pdf2img' ? '' : 'none';
+  $('#docxGroup').style.display = state.mode === 'to-docx' ? '' : 'none';
+  $('#splitGroup').style.display = state.mode === 'split' ? '' : 'none';
+  $('#compressGroup').style.display = state.mode === 'compress' ? '' : 'none';
   $('#mergeNameGroup').style.display = state.mode === 'merge' ? '' : 'none';
+  const imageModes = ['to-pdf', 'merge'];
+  $('#pageSizeGroup').style.display = imageModes.includes(state.mode) ? '' : 'none';
   // 模式切换后清理不符的暂存文件
   const before = state.items.length;
   state.items = state.items.filter(i => {
-    if (pdf2imgMode) return i.kind === 'pdf';
+    if (pdfOnly) return i.kind === 'pdf';
     if (state.mode === 'to-pdf') return i.kind !== 'pdf';
     return true;
   });
   if (state.items.length !== before) toast('已过滤', `${before - state.items.length} 个文件与新模式不符，已移出暂存区`);
   renderItems();
+});
+let splitMode = 'each';
+$('#splitSeg').addEventListener('click', (e) => {
+  const t = e.target.closest('[data-v]');
+  if (!t) return;
+  splitMode = t.dataset.v;
+  $('#splitSeg').querySelectorAll('span').forEach(s => s.classList.toggle('on', s === t));
+  $('#splitEvery').style.display = splitMode === 'every' ? '' : 'none';
+  $('#splitRanges').style.display = splitMode === 'ranges' ? '' : 'none';
+});
+let compressLevel = 'standard';
+$('#compSeg').addEventListener('click', (e) => {
+  const t = e.target.closest('[data-v]');
+  if (!t) return;
+  compressLevel = t.dataset.v;
+  $('#compSeg').querySelectorAll('span').forEach(s => s.classList.toggle('on', s === t));
 });
 $('#presetChips').addEventListener('click', (e) => {
   const t = e.target.closest('[data-preset]');
@@ -297,7 +321,8 @@ async function walkEntry(entry, out, depth) {
 
 // ---------- 开始转换 ----------
 $('#go').onclick = async () => {
-  if (!state.items.length) { toast('暂无文件', '请先拖入或添加要处理的文件'); return; }
+  if (!state.items.length) { toast('暂无文件', '请先拖入或选择要处理的文件'); return; }
+  if (['merge'].includes(state.mode) && state.items.length < 2) { toast('文件不足', '合并模式至少需要 2 个文件'); return; }
   if (state.mode !== 'pdf2img' && !state.engine && state.items.some(i => i.kind === 'office')) {
     toast('未检测到转换引擎', '需要本机安装 MS Office 或 LibreOffice（见左侧提示）', 'err');
     return;
@@ -309,12 +334,16 @@ $('#go').onclick = async () => {
     mergedName: (state.mode === 'merge' ? ($('#mergeName').value || '合并文档') : '图片合并'),
     params: {
       imgPageSize: state.pageSize,
-      imgMergeToOne: state.mode === 'to-pdf' ? state.imgMerge : true,
+      imgMergeToOne: state.mode === 'to-pdf' ? state.imgMerge : (state.mode === 'merge' ? true : false),
       pdf2imgDpi: preset.pdf2imgDpi,
       pdf2imgFormat: state.fmt,
       pdf2imgQuality: preset.quality,
       pdf2imgRange: $('#rangeInput').value.trim(),
-      pdf2imgZip: state.zip
+      pdf2imgZip: state.zip,
+      splitMode,
+      splitEvery: $('#splitEvery').value.trim(),
+      splitRanges: $('#splitRanges').value.trim(),
+      compressLevel
     },
     items: state.items.map(i => ({ path: i.path, kind: i.kind }))
   };
@@ -340,27 +369,49 @@ api.on('queue:update', (snap) => {
 api.on('notify', (n) => toast(n.title, n.text, n.type));
 
 api.on('render:request', (payload) => handleRenderRequest(payload));
+const COMPRESS_LEVELS = { high: { dpi: 150, q: 0.75 }, standard: { dpi: 120, q: 0.6 }, min: { dpi: 96, q: 0.5 } };
 async function handleRenderRequest(req) {
   try {
     const prep = await api.invoke('pdf2img:prepare', {
       src: req.src, outDir: req.outDir, dpi: req.dpi, format: req.format,
-      quality: req.quality, range: req.range, zip: req.zip
+      quality: req.quality, range: req.range,
+      zip: req.kind === 'pdf2img' ? req.zip : false
     });
+    const cmaps = '../node_modules/pdfjs-dist/cmaps/', stdFonts = '../node_modules/pdfjs-dist/standard_fonts/';
+    const progress = (p, t) => api.send('pdf2img:progress', { jobId: req.jobId, page: p, total: t });
+
+    if (req.kind === 'to-docx') {
+      const bytes = await api.invoke('fs:readBytes', req.src);
+      const blob = await pdfToDocxBlob({ bytes, pages: prep.pages, cmaps, stdFonts, onProgress: progress });
+      const name = prep.prefix + '.docx';
+      await api.invoke('fs:writeBytes', prep.token, name, await blob.arrayBuffer());
+      await api.invoke('pdf2img:done', { jobId: req.jobId, ok: true, outPath: prep.dir + '/' + name, pages: prep.pages.length });
+      return;
+    }
+    if (req.kind === 'compress') {
+      const lv = COMPRESS_LEVELS[req.compressLevel] || COMPRESS_LEVELS.standard;
+      const bytes = await api.invoke('fs:readBytes', req.src);
+      const blob = await compressPdfToBlob({ bytes, pages: prep.pages, dpi: lv.dpi, quality: lv.q, cmaps, stdFonts, onProgress: progress });
+      const name = prep.prefix + '_compressed.pdf';
+      await api.invoke('fs:writeBytes', prep.token, name, await blob.arrayBuffer());
+      await api.invoke('pdf2img:done', { jobId: req.jobId, ok: true, outPath: prep.dir + '/' + name, pages: prep.pages.length });
+      return;
+    }
+    // 默认：PDF → 图片（zip 参数仅适用于本模式）
     const ext = req.format === 'png' ? 'png' : 'jpg';
-    let last = 0;
+    const bytes = await api.invoke('fs:readBytes', req.src);
     await runPdf2Img({
-      bytes: await api.invoke('fs:readBytes', req.src),
+      bytes,
       pages: prep.pages,
       dpi: req.dpi,
       format: req.format,
       quality: req.quality,
-      cmaps: '../node_modules/pdfjs-dist/cmaps/',
-      stdFonts: '../node_modules/pdfjs-dist/standard_fonts/',
+      cmaps, stdFonts,
       onPage: async (page, blob) => {
         const name = `${prep.prefix}_p${String(page).padStart(4, '0')}.${ext}`;
         const buf = await blob.arrayBuffer();
         await api.invoke('fs:writeBytes', prep.token, name, buf);
-        api.send('pdf2img:progress', { jobId: req.jobId, page, total: prep.pages.length });
+        progress(page, prep.pages.length);
       }
     });
     let outPath = prep.dir;
@@ -370,6 +421,9 @@ async function handleRenderRequest(req) {
     await api.invoke('pdf2img:done', { jobId: req.jobId, ok: false, error: String(e && e.message || e) });
   }
 }
+
+// 右键菜单 / 命令行传入文件
+api.on('files:add', (paths) => { if (paths && paths.length) addPaths(paths); });
 
 // ---------- 引擎状态 ----------
 function setBanner(text) {
