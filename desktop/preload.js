@@ -13,7 +13,7 @@ const INVOKE_OK = new Set([
   'fs:readBytes', 'fs:writeBytes', 'fs:probeDir', 'open:dir',
   'pdf2img:prepare', 'pdf2img:zip', 'pdf2img:done', 'smoke:getContext', 'smoke:saveSample'
 ]);
-const ON_OK = new Set(['queue:update', 'render:request', 'notify']);
+const ON_OK = new Set(['queue:update', 'render:request', 'notify', 'files:add']);
 
 contextBridge.exposeInMainWorld('pdfmate', {
   send: (ch, ...args) => { if (SEND_OK.has(ch)) ipcRenderer.send(ch, ...args); },
