@@ -41,16 +41,19 @@ jobs:
           ./gradlew assembleDebug --no-daemon
 
       - name: Rename APK
-        run: mv android/app/build/outputs/apk/debug/app-debug.apk PDFMate-1.0.0-android.apk
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          mv android/app/build/outputs/apk/debug/app-debug.apk "PDFMate-$VER-android.apk"
 
       - uses: actions/upload-artifact@v4
         with:
           name: PDFMate-android-apk
-          path: PDFMate-1.0.0-android.apk
+          path: PDFMate-*-android.apk
 
       - name: Upload to release
         run: |
-          gh release upload v1.0.0 PDFMate-1.0.0-android.apk --clobber --repo "$GITHUB_REPOSITORY" \
-            || gh release create v1.0.0 PDFMate-1.0.0-android.apk -t "PDFMate v1.0.0" -n "Windows / Android / iOS installers" --repo "$GITHUB_REPOSITORY"
+          VER=$(node -p "require('./package.json').version")
+          gh release upload "v$VER" "PDFMate-$VER-android.apk" --clobber --repo "$GITHUB_REPOSITORY" \
+            || gh release create "v$VER" "PDFMate-$VER-android.apk" -t "PDFMate v$VER" -n "PDFMate installers: Windows (Setup / Portable), Android (APK), iOS (unsigned IPA). All processing is done locally on your device." --repo "$GITHUB_REPOSITORY"
         env:
           GH_TOKEN: ${{ github.token }}
