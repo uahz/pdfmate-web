@@ -1,46 +1,47 @@
-# PDFMate Web
+# PDFMate
 
-PDF 与图片互转、多文件合并 —— **纯前端、零服务器、零上传**。所有转换都在你的浏览器里完成。
+PDF 全格式转换工具 · Windows 桌面端 + Web + Android + iOS · **全程本地处理，文件不上传**。
 
-在线地址：**https://uahz.github.io/pdfmate-web/**（GitHub Pages）
+设计语言：清透蓝紫（BlueGlass）+ 全局液态玻璃。
 
-## 功能
+## 仓库结构
 
-| 工具 | 说明 |
+| 路径 | 内容 |
 |---|---|
-| 🖼 图片转 PDF | JPG/PNG 多选，支持排序；合并为一个 PDF 或每图一个 PDF；页面尺寸跟随原图或统一 A4 |
-| 📄 PDF 转图片 | 浏览器内逐页渲染（pdf.js），96/150/300 DPI，PNG/JPEG，页码范围，ZIP 打包下载 |
-| 📚 合并 PDF | 多个 PDF + 图片按顺序合并，图片各占一页 |
+| `/`（根目录） | **网页端**（GitHub Pages 在线站点）：图片⇄PDF、PDF转图片、多文件合并，纯前端零上传；兼作 Capacitor 移动端 Web 资产源 |
+| `.github/workflows/` | 移动端自动构建：`android-apk.yml`（APK）、`ios-ipa.yml`（未签名 IPA）、`ios-signed.yml`（证书签名 IPA，需配置 Secrets） |
+| `desktop/` | **Windows 桌面端**（Electron）：Word/Excel/PPT→PDF、图片→PDF、PDF→图片、多格式合并、批量队列、双引擎（LibreOffice / MS Office COM） |
+| `design/` | 四端设计风格参考稿（PC / Web / iOS / Android，高保真 HTML） |
 
-> Word / Excel / PPT → PDF 需要完整排版引擎，请使用 **PDFMate 桌面版**（见 Releases）。
+## 下载安装（v1.0.0）
 
-## 移动端（iOS / Android 原生安装包）
+前往 **[Releases](https://github.com/uahz/pdfmate-web/releases/latest)**：
 
-本仓库的 GitHub Actions 会自动构建**真正的原生安装包**（Capacitor 壳 + 本网页为应用内容）：
+| 平台 | 文件 | 安装方式 |
+|---|---|---|
+| Windows | `PDFMate Setup 1.0.0.exe` | 双击安装 |
+| Windows（便携） | `PDFMate 1.0.0.exe` | 双击直接运行 |
+| Android | `PDFMate-1.0.0-android.apk` | 下载安装，允许「未知来源应用」 |
+| iOS | `PDFMate-1.0.0-ios-unsigned.ipa` | 未签名包，用 AltStore / Sideloadly + Apple ID 自签后安装（需开发者证书可走 `ios-signed.yml` 出签名包） |
 
-- **Android APK**：`PDFMate-1.0.0-android.apk`（Release 附件 / Actions Artifacts）
-  安装：手机下载后直接安装，需允许「安装未知来源应用」。
-- **iOS IPA（未签名）**：`PDFMate-1.0.0-ios-unsigned.ipa`
-  因无 Apple 开发者证书，IPA 为未签名包：用 **AltStore / Sideloadly + 个人 Apple ID** 自签后安装（免费，7 天有效期需续签）；拥有开发者证书的用户可直接签名分发。正式上架 App Store 需苹果开发者账号（$99/年）。
-- 重新构建：仓库 **Actions** 页手动 Run workflow，或修改网站文件自动触发；产物自动挂到 Release。
-
-### 本地构建（可选）
-
-```bash
-npm install
-npx cap add android && npx cap sync android && cd android && ./gradlew assembleDebug   # Android（Windows 可用）
-npx cap add ios && npx cap sync ios                                                    # iOS 需 macOS + Xcode
-```
-
-## 隐私
-
-- 不上传、无账号、无追踪；转换库经 CDN 加载后由 Service Worker 缓存，断网可用。
-- 依赖：pdf-lib（图片→PDF/合并）、pdf.js（PDF 渲染）、JSZip（打包），均为本地运行的开源库。
-
-## 本地运行
-
-直接双击 `index.html` 即可（无构建步骤）；或任意静态服务器：
+## 桌面端开发
 
 ```bash
-npx serve .
+cd desktop
+npm install        # postinstall 自动下载 Electron 二进制（.npmrc 已配置国内镜像）
+npm start          # 启动应用
+npm run smoke      # 端到端自检（7 步真实转换链路）
+npm run dist       # 打包 portable + NSIS 安装程序
 ```
+
+双引擎说明：默认 LibreOffice headless 优先（无头、确定性）；可切换 MS Office COM（还原度优先，带健康探测与自动降级）。详见 `desktop/README.md`。
+
+## 移动端构建
+
+修改根目录网页文件或 `assets/` 图标后推送，Actions 自动构建并更新 Release 附件；
+也可在 Actions 页面手动 Run workflow。
+
+## 安全设计要点
+
+- 网页/移动端：全部转换在客户端完成，无任何网络上传；Service Worker 缓存，离线可用。
+- 桌面端：本地引擎处理；渲染端写盘使用一次性令牌 + 路径边界校验；IPC 通道白名单；子进程参数数组调用。
