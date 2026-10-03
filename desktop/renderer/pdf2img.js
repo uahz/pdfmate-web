@@ -3,18 +3,20 @@
 import * as pdfjs from '../node_modules/pdfjs-dist/build/pdf.min.mjs';
 
 let workerReady = false;
-function ensureWorker() {
-  if (workerReady) return;
-  const worker = new Worker(
-    new URL('../node_modules/pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url),
-    { type: 'module' }
-  );
-  pdfjs.GlobalWorkerOptions.workerPort = worker;
-  workerReady = true;
+export async function ensurePdfJs() {
+  if (!workerReady) {
+    const worker = new Worker(
+      new URL('../node_modules/pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url),
+      { type: 'module' }
+    );
+    pdfjs.GlobalWorkerOptions.workerPort = worker;
+    workerReady = true;
+  }
+  return pdfjs;
 }
 
 export async function runPdf2Img({ bytes, pages, dpi, format, quality, cmaps, stdFonts, onPage }) {
-  ensureWorker();
+  ensurePdfJs();
   const doc = await pdfjs.getDocument({
     data: new Uint8Array(bytes),
     cMapUrl: cmaps || null,
