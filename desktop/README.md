@@ -13,6 +13,16 @@ npm run ui         # 无头截图 UI 预览 → ui-preview.png
 npm run dist       # 打包安装包（electron-builder，需联网拉取打包工具）
 ```
 
+## V1.3 新增功能
+
+| 功能 | 说明 |
+|---|---|
+| PDF → Word（数字版） | pdf.js 提取文本行/段落 + docx 生成，保留字号层级与标题加粗；扫描件 OCR 在 v2.0 |
+| 拆分 PDF | 每页一个 / 每 N 页一份 / 自定义范围（如 1-3,5-8），输出 `<名>_partNN.pdf` |
+| 压缩 PDF | 逐页重编码 JPEG 后重建；档位 高质量150 / 标准120 / 最小96 |
+| 右键菜单 | NSIS 安装程序写入资源管理器右键「Convert with PDFMate」，多选文件直接进队列 |
+| 引擎策略 | auto 默认 LibreOffice 优先；MS Office COM 带健康探测与自动降级 |
+
 ## V1.0 功能范围（对应路线图 M1）
 
 | 功能 | 说明 |
