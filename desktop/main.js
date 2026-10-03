@@ -12,6 +12,10 @@ const { ensureDir, parsePageRange } = require('./lib/util');
 
 const SMOKE = process.argv.includes('--smoke');
 const DEMO_SHOT = process.argv.includes('--demo-shot');
+if (DEMO_SHOT) {
+  app.commandLine.appendSwitch('disable-gpu');
+  app.commandLine.appendSwitch('disable-gpu-compositing');
+}
 let win = null;
 let store, queue;
 let lastSnapshot = null;
@@ -40,6 +44,22 @@ app.setAppUserModelId('com.pdfmate.app');
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock && !SMOKE) { app.quit(); }
 
+// 收集命令行传入的文件路径（右键菜单 / 拖到快捷方式 / second-instance）
+function filesFromArgv(argv) {
+  return argv.slice(1).filter(a => {
+    try { return fs.existsSync(a) && fs.statSync(a).isFile(); } catch { return false; }
+  });
+}
+
+app.on('second-instance', (_e, argv) => {
+  if (win) {
+    if (win.isMinimized()) win.restore();
+    win.focus();
+    const files = filesFromArgv(argv);
+    if (files.length) win.webContents.send('files:add', files);
+  }
+});
+
 function createWindow() {
   const bounds = (store.settings.windowBounds) || {};
   win = new BrowserWindow({
@@ -63,6 +83,16 @@ function createWindow() {
       : DEMO_SHOT ? { query: { demo: '1' } }
       : undefined);
   win.on('ready-to-show', () => { if (!SMOKE && !DEMO_SHOT) win.show(); });
+  win.webContents.on('console-message', (_e, _lv, message, line, sourceId) => {
+    if ((SMOKE || DEMO_SHOT) && message) console.log('[RENDERER ' + (sourceId || '?').split(/[\\/]/).pop() + ':' + line + '] ' + message);
+  });
+  win.webContents.on('preload-error', (_e, p, err) => console.log('[PRELOAD_ERROR]', p, String(err)));
+  win.webContents.on('did-fail-load', (_e, code, desc) => { if (SMOKE || DEMO_SHOT) console.log('[LOAD_FAIL]', code, desc); });
+  // 右键菜单 / 命令行传入的文件
+  const argFiles = filesFromArgv(process.argv);
+  if (argFiles.length) {
+    win.webContents.once('did-finish-load', () => win.webContents.send('files:add', argFiles));
+  }
   if (DEMO_SHOT) {
     win.webContents.once('did-finish-load', () => {
       setTimeout(async () => {
@@ -222,12 +252,14 @@ function wireQueue() {
   queue.on('render-request', ({ job, batch }) => {
     broadcast('render:request', {
       jobId: job.id,
+      kind: batch.mode,
       src: job.src,
       dpi: batch.params.pdf2imgDpi || 150,
       format: batch.params.pdf2imgFormat || 'png',
       quality: batch.params.pdf2imgQuality || 0.92,
       range: batch.params.pdf2imgRange || '',
       zip: batch.params.pdf2imgZip !== false,
+      compressLevel: batch.params.compressLevel || 'standard',
       outDir: batch.outDir || null
     });
   });
