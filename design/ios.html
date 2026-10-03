@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PDFMate · iOS 端风格参考</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+.phones{display:flex;gap:46px;align-items:flex-start}
+.pcol{display:flex;flex-direction:column;align-items:center;gap:18px}
+.pcap{text-align:center}
+.pcap b{font-size:14.5px}
+.pcap span{display:block;font-size:12px;color:var(--ink3);margin-top:4px}
+/* iOS 屏幕通用 */
+.isscr{position:absolute;inset:0;display:flex;flex-direction:column;background:#F2F3F8;
+  background-image:radial-gradient(240px 280px at 88% 16%,rgba(124,92,255,.18),transparent 70%),
+                   radial-gradient(280px 320px at 8% 74%,rgba(79,124,255,.16),transparent 70%),
+                   radial-gradient(220px 260px at 92% 86%,rgba(255,138,101,.12),transparent 70%)}
+.isscr .statusbar{color:#111}
+.card{background:rgba(255,255,255,.58);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);border-radius:16px;box-shadow:0 4px 16px rgba(15,23,42,.07),inset 0 0 0 1px rgba(255,255,255,.55),inset 0 1px 1px rgba(255,255,255,.8)}
+/* 屏1 首页 */
+.ltitle{padding:6px 20px 2px;display:flex;align-items:flex-end;justify-content:space-between}
+.ltitle h2{font-size:25px;letter-spacing:.2px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--grad-brand);color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}
+.greet{padding:2px 20px 14px;font-size:12.5px;color:#8A8A8E}
+.igrid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:0 16px}
+.igrid .card{padding:14px}
+.itile{width:44px;height:44px;border-radius:14px;color:#fff;font-weight:800;display:grid;place-items:center;font-size:15px}
+.igrid b{display:block;font-size:14px;margin-top:10px}
+.igrid small{display:block;font-size:11px;color:#8A8A8E;margin-top:3px}
+.sect{padding:18px 20px 10px;font-size:13px;font-weight:700;color:#3A3A3C;display:flex;justify-content:space-between;align-items:center}
+.sect span{font-size:12px;color:#8A8A8E;font-weight:500}
+.recent{margin:0 16px;padding:4px 14px}
+.rrow{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #F0F0F4}
+.rrow:last-child{border-bottom:none}
+.rrow b{font-size:13px;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}
+.rrow small{font-size:11px;color:#8A8A8E;display:block;margin-top:2px}
+.rrow .pill{margin-left:auto;transform:scale(.92)}
+.tabbar{position:absolute;left:14px;right:14px;bottom:25px;display:flex;padding:9px 10px;border-radius:999px;z-index:70}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:#8E8E93;padding:6px 0 4px;border-radius:999px}
+.tb.on{color:var(--brand-600);font-weight:700;background:linear-gradient(135deg,rgba(79,123,255,.26),rgba(124,92,255,.2));box-shadow:inset 0 1px 1px rgba(255,255,255,.75)}
+/* 屏2 转换页 */
+.inav{display:flex;align-items:center;justify-content:space-between;padding:8px 18px 10px;font-size:15px;font-weight:600}
+.inav .bk{color:var(--brand-500);font-size:15px;display:flex;align-items:center;gap:2px}
+.inav span:last-child{color:var(--brand-500);font-weight:400}
+.ipanel{margin:4px 16px 12px;padding:6px 14px}
+.irow{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #F0F0F4}
+.irow:last-child{border-bottom:none}
+.irow b{font-size:13.5px;font-weight:600;display:block}
+.irow small{font-size:11px;color:#8A8A8E;margin-top:2px;display:block}
+.ck{width:22px;height:22px;border-radius:50%;border:1.8px solid #C7C7CC;flex:none;margin-left:auto}
+.ck.on{border:none;background:var(--brand-500);display:grid;place-items:center;color:#fff}
+.pgroup2{margin:0 16px 12px;padding:14px}
+.pgroup2>label{font-size:12px;font-weight:700;color:#6D6D72;display:block;margin-bottom:10px;letter-spacing:.3px}
+.slider{height:5px;border-radius:99px;background:linear-gradient(90deg,var(--brand-500) 85%,#E5E5EA 85%);position:relative;margin:8px 2px 2px}
+.slider i{position:absolute;top:50%;left:85%;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.slabel{display:flex;justify-content:space-between;font-size:11px;color:#8A8A8E}
+.cta2{position:absolute;left:16px;right:16px;bottom:26px;height:54px;border-radius:999px;font-size:16px;z-index:70;
+  box-shadow:0 18px 42px rgba(79,107,255,.45),0 4px 12px rgba(79,107,255,.25),inset 0 1.5px 1.5px rgba(255,255,255,.55),inset 0 -2px 3px rgba(10,15,60,.28)}
+.hint{padding:0 22px 96px;font-size:11px;color:#8A8A8E;text-align:center}
+/* 屏3 任务中心 */
+.stat2{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:4px 16px 14px}
+.stat2 .card{padding:14px}
+.stat2 b{font-size:22px}
+.stat2 span{display:block;font-size:11.5px;color:#8A8A8E;margin-top:4px}
+.actcard{margin:0 16px;padding:14px;display:flex;align-items:center;gap:13px}
+.ring{position:relative;width:58px;height:58px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:12.5px;color:var(--brand-600)}
+.actcard .btn{margin-left:auto;height:32px;padding:0 14px;font-size:12.5px;border-radius:9px;background:var(--brand-50);color:var(--brand-600)}
+.done .ck{margin-left:0;border:none;background:#34C759;display:grid;place-items:center;color:#fff}
+.share{margin-left:auto;color:#C7C7CC}
+</style>
+</head>
+<body class="stage light">
+  <!-- 液态玻璃透镜折射滤镜：R 通道驱动横向位移，G 通道驱动纵向位移；中性值 128 = 不位移 -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <filter id="lgl" x="-15%" y="-55%" width="130%" height="210%" color-interpolation-filters="sRGB">
+      <feImage href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='302' height='60'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='rgb(0,128,128)'/%3E%3Cstop offset='0.1' stop-color='rgb(128,128,128)'/%3E%3Cstop offset='0.9' stop-color='rgb(128,128,128)'/%3E%3Cstop offset='1' stop-color='rgb(255,128,128)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='302' height='60' fill='url(%23g)'/%3E%3C/svg%3E" x="0" y="0" width="302" height="60" preserveAspectRatio="none" result="mx"/>
+      <feDisplacementMap in="SourceGraphic" in2="mx" scale="11" xChannelSelector="R" yChannelSelector="G" result="dx"/>
+      <feImage href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='302' height='60'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='rgb(128,0,128)'/%3E%3Cstop offset='0.12' stop-color='rgb(128,128,128)'/%3E%3Cstop offset='0.88' stop-color='rgb(128,128,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,255,128)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='302' height='60' fill='url(%23g)'/%3E%3C/svg%3E" x="0" y="0" width="302" height="60" preserveAspectRatio="none" result="my"/>
+      <feDisplacementMap in="dx" in2="my" scale="7.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs></svg>
+  <header class="stage-head">
+    <div>
+      <h1>iOS 端 · 核心三屏</h1>
+      <p>Human Interface Guidelines · 液态玻璃悬浮底栏 · 390×844 基准</p>
+    </div>
+    <a class="back" href="index.html">← 返回总览</a>
+  </header>
+
+  <div class="phones">
+    <!-- 屏1 首页 -->
+    <div class="pcol">
+      <div class="phone">
+        <div class="island"></div>
+        <div class="screen"><div class="isscr">
+          <div class="statusbar"><span>9:41</span><span class="sicons"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="batt"></span></span></div>
+          <div class="ltitle"><h2>PDFMate</h2><div class="avatar">智</div></div>
+          <div class="greet">下午好 👋 拖不动文件？在这里指尖完成转换</div>
+          <div class="igrid">
+            <div class="card"><div class="itile" style="background:var(--pdf);font-size:10.5px">PDF</div><b>转为 PDF</b><small>Word / 图片 / 网页</small></div>
+            <div class="card"><div class="itile" style="background:var(--word)">W</div><b>PDF 转 Word</b><small>可编辑还原</small></div>
+            <div class="card"><div class="itile" style="background:var(--excel)">X</div><b>PDF 转 Excel</b><small>表格跨页合并</small></div>
+            <div class="card"><div class="itile" style="background:var(--img)">图</div><b>图片转 PDF</b><small>多图排序合成</small></div>
+            <div class="card"><div class="itile" style="background:var(--merge)">合</div><b>合并 PDF</b><small>自定义顺序</small></div>
+            <div class="card"><div class="itile" style="background:#334155">⋯</div><b>更多工具</b><small>压缩 / 拆分 / OCR</small></div>
+          </div>
+          <div class="sect">最近任务<span>查看全部 ›</span></div>
+          <div class="card recent">
+            <div class="rrow"><div class="tile sm word" style="width:32px;height:32px;border-radius:9px;font-size:12px">W</div><div><b>2026年度营销预算报告</b><small>Word → PDF · 刚刚</small></div><span class="pill ok"><i class="dot"></i>完成</span></div>
+            <div class="rrow"><div class="tile sm pdf" style="width:32px;height:32px;border-radius:9px;font-size:9px">PDF</div><div><b>产品白皮书</b><small>PDF → PNG · 昨天</small></div><span class="pill err"><i class="dot"></i>已加密</span></div>
+            <div class="rrow"><div class="tile sm merge" style="width:32px;height:32px;border-radius:9px;font-size:12px">合</div><div><b>顺丰发票 ×4 合并</b><small>图片 → PDF · 10:24</small></div><span class="pill ok"><i class="dot"></i>完成</span></div>
+            <div class="rrow"><div class="tile sm merge" style="width:32px;height:32px;border-radius:9px;font-size:12px">合</div><div><b>产品图册_合并.pdf</b><small>图片 → PDF · 昨天</small></div><span class="pill ok"><i class="dot"></i>完成</span></div>
+            <div class="rrow"><div class="tile sm word" style="width:32px;height:32px;border-radius:9px;font-size:12px">W</div><div><b>周报_0928.docx</b><small>Word → PDF · 昨天</small></div><span class="pill ok"><i class="dot"></i>完成</span></div>
+          </div>
+          <div class="tabbar lglass">
+            <div class="tb on"><svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="12" y="3" width="7" height="7" rx="2"/><rect x="3" y="12" width="7" height="7" rx="2"/><rect x="12" y="12" width="7" height="7" rx="2"/></svg>首页</div>
+            <div class="tb"><svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l2.5 1.5"/></svg>任务</div>
+            <div class="tb"><svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="14" height="14" rx="3"/><path d="M8 12l2.5 2.5L15.5 9"/></svg>工具</div>
+            <div class="tb"><svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="8" r="3.4"/><path d="M4.5 18.5c1.2-3 3.6-4.5 6.5-4.5s5.3 1.5 6.5 4.5"/></svg>我的</div>
+          </div>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+      <div class="pcap"><b>① 首页 · 功能宫格</b><span>高频功能 2×3 直达 · 液态玻璃悬浮 Tab 栏</span></div>
+    </div>
+
+    <!-- 屏2 转换参数 -->
+    <div class="pcol">
+      <div class="phone">
+        <div class="island"></div>
+        <div class="screen"><div class="isscr">
+          <div class="statusbar"><span>9:41</span><span class="sicons"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="batt"></span></span></div>
+          <div class="inav"><span class="bk">‹ 返回</span><span>转为 PDF</span><span>预设</span></div>
+          <div class="card ipanel">
+            <div class="irow"><div class="tile sm word" style="width:36px;height:36px;border-radius:10px">W</div><div><b>2026年度营销预算报告.docx</b><small>2.4 MB · 12 页</small></div><span class="ck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
+            <div class="irow"><div class="tile sm img" style="width:36px;height:36px;border-radius:10px">图</div><div><b>扫描件_租赁合同.jpg</b><small>4.6 MB · 1 页 · 将自动 OCR</small></div><span class="ck on"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
+          </div>
+          <div class="pgroup2 card">
+            <label>输出质量</label>
+            <div class="seg"><span>标准 96</span><span class="on">高清 150</span><span>超清 300</span></div>
+          </div>
+          <div class="pgroup2 card">
+            <label>图片压缩质量</label>
+            <div class="slabel"><span>体积更小</span><span>85%</span><span>更清晰</span></div>
+            <div class="slider"><i></i></div>
+          </div>
+          <div class="pgroup2 card">
+            <div class="irow" style="border:none;padding:2px 0"><b>输出 PDF 加密</b><span class="switch on" style="margin-left:auto"><i></i></span></div>
+            <div class="irow" style="border:none;padding:2px 0"><b>完成后通知我</b><span class="switch" style="margin-left:auto"><i></i></span></div>
+          </div>
+          <p class="hint">全程在本机处理 · 完成后可一键分享到微信 / 邮件</p>
+          <button class="btn btn-primary cta2">开始转换 · 2 个文件</button>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+      <div class="pcap"><b>② 转换参数页</b><span>勾选文件 + 质量分档 · 液态玻璃悬浮 CTA</span></div>
+    </div>
+
+    <!-- 屏3 任务中心 -->
+    <div class="pcol">
+      <div class="phone">
+        <div class="island"></div>
+        <div class="screen"><div class="isscr">
+          <div class="statusbar"><span>9:41</span><span class="sicons"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="batt"></span></span></div>
+          <div class="ltitle"><h2>任务中心</h2><span style="font-size:13px;color:var(--brand-500)">清空</span></div>
+          <div class="greet">今日 12 个任务 · 转换 186 页</div>
+          <div class="stat2">
+            <div class="card"><b>12</b><span>今日转换（个）</span></div>
+            <div class="card"><b style="color:var(--ok)">98%</b><span>成功率（近 30 天）</span></div>
+          </div>
+          <div class="sect">进行中<span>1</span></div>
+          <div class="card actcard">
+            <div class="ring">
+              <svg width="58" height="58"><circle cx="29" cy="29" r="24" fill="none" stroke="#E8EDF6" stroke-width="6"/><circle cx="29" cy="29" r="24" fill="none" stroke="#4F6BFF" stroke-width="6" stroke-linecap="round" stroke-dasharray="98 151"/></svg>
+              <b>65%</b>
+            </div>
+            <div><b style="font-size:13.5px">客户提案_终版.pptx</b><small style="display:block;font-size:11px;color:#8A8A8E;margin-top:3px">PPT → PDF · 第 16/24 页</small></div>
+            <button class="btn">暂停</button>
+          </div>
+          <div class="sect">已完成<span>11</span></div>
+          <div class="card recent">
+            <div class="rrow done"><span class="ck"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><div><b>2026年度营销预算报告.pdf</b><small>12 页 · 1.1 MB · 刚刚</small></div><svg class="share" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 12V3M6.5 6 10 2.8 13.5 6"/><path d="M5 10v6h10v-6"/></svg></div>
+            <div class="rrow done"><span class="ck"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><div><b>顺丰发票_合并.pdf</b><small>4 个文件 · 2.3 MB · 10:24</small></div><svg class="share" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 12V3M6.5 6 10 2.8 13.5 6"/><path d="M5 10v6h10v-6"/></svg></div>
+            <div class="rrow done"><span class="ck"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><div><b>Q3销售明细表.pdf</b><small>3 个工作表 · 09:57</small></div><svg class="share" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 12V3M6.5 6 10 2.8 13.5 6"/><path d="M5 10v6h10v-6"/></svg></div>
+            <div class="rrow done"><span class="ck"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><div><b>发票_0901_合并.pdf</b><small>4 张图片 · 昨天</small></div><svg class="share" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 12V3M6.5 6 10 2.8 13.5 6"/><path d="M5 10v6h10v-6"/></svg></div>
+            <div class="rrow done"><span class="ck"><svg width="11" height="11" viewBox="0 0 12 12"><path d="m2.5 6.5 2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><div><b>租赁合同_扫描件.docx</b><small>OCR → Word · 昨天</small></div><svg class="share" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 12V3M6.5 6 10 2.8 13.5 6"/><path d="M5 10v6h10v-6"/></svg></div>
+          </div>
+          <div class="tabbar lglass">
+            <div class="tb"><svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="12" y="3" width="7" height="7" rx="2"/><rect x="3" y="12" width="7" height="7" rx="2"/><rect x="12" y="12" width="7" height="7" rx="2"/></svg>首页</div>
+            <div class="tb on"><svg width="21" height="21" viewBox="0 0 22 22" fill="currentColor"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l2.5 1.5" stroke="#F2F3F8" stroke-width="1.8" fill="none"/></svg>任务</div>
+            <div class="tb"><svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="14" height="14" rx="3"/><path d="M8 12l2.5 2.5L15.5 9"/></svg>工具</div>
+            <div class="tb"><svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="8" r="3.4"/><path d="M4.5 18.5c1.2-3 3.6-4.5 6.5-4.5s5.3 1.5 6.5 4.5"/></svg>我的</div>
+          </div>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+      <div class="pcap"><b>③ 任务中心</b><span>进度环 + 批量结果 · 液态玻璃悬浮 Tab 栏</span></div>
+    </div>
+  </div>
+
+  <p class="stage-note">高保真静态参考 · 非最终视觉稿 · PDFMate Design Preview v0.1</p>
+</body>
+</html>
