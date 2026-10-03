@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PDFMate · 四端设计风格总览</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+body{
+  background-image:radial-gradient(700px 420px at 8% -4%,rgba(79,124,255,.14),transparent 60%),
+                   radial-gradient(700px 440px at 94% -2%,rgba(124,92,255,.13),transparent 60%),
+                   radial-gradient(700px 500px at -4% 55%,rgba(14,165,233,.10),transparent 62%),
+                   radial-gradient(800px 560px at 104% 78%,rgba(255,122,26,.07),transparent 62%)}
+.wrap{max-width:1160px;margin:0 auto;padding:44px 32px 60px}
+.head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.head h1{font-size:27px;letter-spacing:.5px}
+.ver{font-size:12px;color:var(--ink3);margin-left:auto}
+.sub{font-size:13.5px;color:var(--ink2);margin-bottom:28px}
+.panel{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);border-radius:22px;padding:26px 28px;box-shadow:var(--sh-1),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 1px 1px rgba(255,255,255,.85);margin-bottom:20px}
+.panel>h2{font-size:15.5px;display:flex;align-items:center;gap:9px;margin-bottom:18px}
+.panel>h2 .no{width:22px;height:22px;border-radius:7px;background:var(--brand-50);color:var(--brand-600);font-size:12px;font-weight:700;display:grid;place-items:center}
+.panel>p.desc{font-size:12.5px;color:var(--ink3);margin:-12px 0 16px}
+/* 关键词 */
+.kws{display:flex;flex-wrap:wrap;gap:10px}
+.kw{font-size:13px;font-weight:600;color:var(--brand-600);background:rgba(79,107,255,.12);border-radius:999px;padding:9px 18px}
+.kw.alt{color:var(--ink2);background:rgba(255,255,255,.55)}
+/* 色板 */
+.swrow{display:flex;border-radius:14px;overflow:hidden;box-shadow:var(--sh-1);margin-bottom:6px}
+.sw{flex:1;height:64px;position:relative}
+.sw span{position:absolute;left:10px;bottom:8px;font-size:11px;font-weight:700;color:#fff;opacity:.95}
+.sw.lite span{color:var(--ink2)}
+.swcap{display:flex;font-size:11px;color:var(--ink3);margin-bottom:18px}
+.swcap span{flex:1;text-align:center}
+.semrow{display:flex;gap:12px}
+.sem{flex:1;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.sem .b{width:100%;height:8px;border-radius:99px;margin-bottom:8px}
+.sem small{font-size:11px;color:var(--ink3);display:block;margin-top:2px}
+.sem b{font-size:12.5px}
+.fmtrow{display:flex;gap:12px;margin-top:16px}
+.fmtc{flex:1;display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.fmtc small{display:block;font-size:10.5px;color:var(--ink3)}
+.fmtc b{font-size:12px}
+/* 字体 */
+.trow{display:flex;align-items:baseline;gap:22px;padding:12px 0;border-bottom:1px dashed #EEF1F8}
+.trow:last-child{border:none}
+.trow .tag{width:150px;font-size:11.5px;color:var(--ink3);flex:none}
+/* 圆角阴影 */
+.shape{display:flex;gap:20px}
+.sbox{flex:1;background:#F6F8FD;border:1px solid var(--line);display:grid;place-items:center;height:96px;font-size:12px;color:var(--ink2)}
+/* 组件 */
+.comps{display:flex;flex-direction:column;gap:18px}
+.crow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.crow .lab{width:110px;font-size:12px;color:var(--ink3);flex:none}
+.btn{height:40px;padding:0 22px;font-size:13.5px}
+.btn.sm{height:32px;padding:0 14px;font-size:12px;border-radius:9px}
+/* 四端入口 */
+.plats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.plat{border:1px solid rgba(255,255,255,.7);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);box-shadow:0 6px 18px rgba(15,23,42,.07),inset 0 1px 1px rgba(255,255,255,.8)}
+.plat .cover{height:104px;display:grid;place-items:center;color:#fff;font-size:15px;font-weight:700}
+.plat .body{padding:14px 16px 16px}
+.plat b{font-size:14px;display:block}
+.plat small{font-size:11.5px;color:var(--ink3);display:block;margin-top:5px;line-height:1.6}
+.plat a{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--brand-600);font-weight:700}
+.foot{text-align:center;font-size:12px;color:var(--ink3);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="logo" style="width:44px;height:44px;font-size:21px;border-radius:13px">P</div>
+    <h1>PDFMate · 四端设计风格总览</h1>
+    <span class="ver">v0.1 · 2026-10-02 · 供风格评审</span>
+  </div>
+  <p class="sub">设计语言：清透蓝紫（BlueGlass）—— 蓝紫渐变点睛、大圆角卡片、高信息密度；全局采用液态玻璃材质：悬浮底栏、卡片、面板、导航共用同一套玻璃规格（透镜折射 + 高光边缘 + 低白底通透），四端按各平台规范差异化表达。</p>
+
+  <div class="panel">
+    <h2><span class="no">1</span>风格关键词</h2>
+    <div class="kws">
+      <span class="kw">清透专业</span><span class="kw">蓝紫渐变点睛</span><span class="kw">液态玻璃 · 全局材质</span><span class="kw">大圆角卡片</span><span class="kw">高信息密度</span>
+      <span class="kw alt">品牌色驱动状态语义</span><span class="kw alt">格式即色彩（W/X/P/PDF 四色体系）</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="no">2</span>色彩系统</h2>
+    <p class="desc">主色 BlueGlass #4F6BFF，向紫 #6C5CFF 过渡形成品牌渐变；文件格式拥有固定色彩认知，全端一致。</p>
+    <div class="swrow">
+      <div class="sw lite" style="background:#EEF3FF"><span>50</span></div>
+      <div class="sw lite" style="background:#DEE7FF"><span>100</span></div>
+      <div class="sw lite" style="background:#A9BCFF"><span>300</span></div>
+      <div class="sw" style="background:#4F6BFF"><span>500 主色</span></div>
+      <div class="sw" style="background:#3D53E8"><span>600</span></div>
+      <div class="sw" style="background:#6C5CFF"><span>Violet</span></div>
+      <div class="sw" style="background:linear-gradient(135deg,#4F7CFF,#6C5CFF)"><span>品牌渐变</span></div>
+    </div>
+    <div class="swcap"><span>悬浮底</span><span>选中底</span><span>描边</span><span>主按钮/选中</span><span>按压</span><span>渐变端点</span><span>CTA/进度</span></div>
+    <div class="semrow">
+      <div class="sem"><div class="b" style="background:#16A34A"></div><b>成功 #16A34A</b><small>转换完成</small></div>
+      <div class="sem"><div class="b" style="background:#3D53E8"></div><b>进行 #3D53E8</b><small>转换中</small></div>
+      <div class="sem"><div class="b" style="background:#F43F5E"></div><b>失败 #F43F5E</b><small>报错/重试</small></div>
+      <div class="sem"><div class="b" style="background:#FF9F1C"></div><b>警示 #FF9F1C</b><small>排队/低置信</small></div>
+    </div>
+    <div class="fmtrow">
+      <div class="fmtc"><div class="tile sm word">W</div><div><b>Word #2B6CD4</b><small>文档蓝</small></div></div>
+      <div class="fmtc"><div class="tile sm excel">X</div><div><b>Excel #1E9E6A</b><small>表格绿</small></div></div>
+      <div class="fmtc"><div class="tile sm ppt">P</div><div><b>PPT #E8590C</b><small>演示橙</small></div></div>
+      <div class="fmtc"><div class="tile sm pdf">PDF</div><div><b>PDF #E5252A</b><small>标准红</small></div></div>
+      <div class="fmtc"><div class="tile sm img">图</div><div><b>图片 #8B5CF6</b><small>媒体紫</small></div></div>
+      <div class="fmtc"><div class="tile sm merge">合</div><div><b>合并 #0EA5E9</b><small>合成青</small></div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="no">3</span>字体与层级</h2>
+    <p class="desc">Inter + HarmonyOS Sans SC / MiSans / 雅黑回退；数字用等宽变体，强调速度与占比类信息。</p>
+    <div class="trow"><span class="tag">展示标题 · 46/32</span><b style="font-size:30px">PDF 全格式，一站转换</b></div>
+    <div class="trow"><span class="tag">页面标题 · 21/500</span><span style="font-size:20px;font-weight:500">批量转换工作台</span></div>
+    <div class="trow"><span class="tag">正文 · 14/1.7</span><span style="font-size:14px">拖入文件或整个文件夹，选择预设后一键批量转换，全程本地处理。</span></div>
+    <div class="trow"><span class="tag">辅助 · 12</span><span style="font-size:12px;color:var(--ink3)">单文件 ≤50MB / 100 页 · 24 小时自动删除</span></div>
+    <div class="trow"><span class="tag">数字强调</span><span style="font-size:14px;font-weight:700;color:var(--brand-600)">12.4 页/秒 · 98.6% 成功率 · 2.4 MB</span></div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="no">4</span>形状 / 阴影 / 间距</h2>
+    <p class="desc">圆角三档 10 / 16 / 24，按钮 12；阴影两级：卡片 sh-1、悬浮 sh-2；基础间距 8 的倍数。</p>
+    <div class="shape">
+      <div class="sbox" style="border-radius:10px">r-s 10 · 输入框/小按钮</div>
+      <div class="sbox" style="border-radius:16px;box-shadow:var(--sh-1)">r-m 16 · 卡片/面板</div>
+      <div class="sbox" style="border-radius:24px;box-shadow:var(--sh-2)">r-l 24 · 弹层/上传区</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="no">5</span>基础组件</h2>
+    <div class="comps">
+      <div class="crow"><span class="lab">按钮</span>
+        <button class="btn btn-primary">开始转换</button>
+        <button class="btn btn-ghost">添加文件夹</button>
+        <button class="btn btn-ghost sm">暂停</button>
+        <button class="btn btn-primary sm">重试</button>
+      </div>
+      <div class="crow"><span class="lab">状态胶囊</span>
+        <span class="pill ok"><i class="dot"></i>完成 · 1.8s</span>
+        <span class="pill run"><i class="dot"></i>转换中 65%</span>
+        <span class="pill queue"><i class="dot"></i>排队中</span>
+        <span class="pill err"><i class="dot"></i>失败 · 已加密</span>
+        <span class="pill warn"><i class="dot"></i>OCR 低置信</span>
+      </div>
+      <div class="crow"><span class="lab">分段控件</span>
+        <div class="seg" style="width:340px"><span class="on">PDF</span><span>图片 PNG</span><span>Word</span></div>
+        <span class="switch on"><i></i></span>
+        <span class="switch"><i></i></span>
+      </div>
+      <div class="crow"><span class="lab">进度</span>
+        <div class="progress" style="flex:1"><i style="width:65%"></i></div>
+        <span style="font-size:12.5px;font-weight:700;color:var(--run)">65%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="no">6</span>四端参考入口</h2>
+    <div class="plats">
+      <div class="plat">
+        <div class="cover" style="background:linear-gradient(135deg,#0E1730,#2F3FBE)">PC 桌面端</div>
+        <div class="body"><b>Fluent 玻璃工作台</b><small>玻璃窗口 + 深色玻璃侧栏，批量队列 / 参数面板 / 状态栏三段式</small><a href="pc.html">查看参考图 →</a></div>
+      </div>
+      <div class="plat">
+        <div class="cover" style="background:linear-gradient(135deg,#4F7CFF,#6C5CFF)">网页端</div>
+        <div class="body"><b>玻璃营销落地页</b><small>玻璃导航 + 玻璃上传卡 + 格式矩阵，承接搜索流量</small><a href="web.html">查看参考图 →</a></div>
+      </div>
+      <div class="plat">
+        <div class="cover" style="background:linear-gradient(135deg,#6C5CFF,#B15CFF)">iOS 端</div>
+        <div class="body"><b>HIG 分组卡片</b><small>大标题导航 / Dynamic Island / 液态玻璃悬浮底栏</small><a href="ios.html">查看参考图 →</a></div>
+      </div>
+      <div class="plat">
+        <div class="cover" style="background:linear-gradient(135deg,#3D53E8,#14B8A6)">Android 端</div>
+        <div class="body"><b>Material 3 动态色</b><small>薰衣草调色板 / 液态玻璃悬浮 Dock / 玻璃 Snackbar</small><a href="android.html">查看参考图 →</a></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot">PDFMate Design Preview v0.1 · 高保真静态参考，仅供风格评审，非最终视觉稿</p>
+</div>
+</body>
+</html>
