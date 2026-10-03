@@ -86,6 +86,9 @@ footer{max-width:1040px;margin:0 auto;padding:8px 20px 44px;display:flex;justify
       <span class="chip on" data-tool="img2pdf">🖼 <span>图片转 PDF</span></span>
       <span class="chip" data-tool="pdf2img">📄 <span>PDF 转图片</span></span>
       <span class="chip" data-tool="merge">📚 <span>合并 PDF</span></span>
+      <span class="chip" data-tool="todocx">📝 <span>PDF 转 Word</span></span>
+      <span class="chip" data-tool="split">✂️ <span>拆分 PDF</span></span>
+      <span class="chip" data-tool="compress">🗜 <span>压缩 PDF</span></span>
       <a class="btn btn-primary dl" id="dlDesktop" href="#" target="_blank" rel="noopener">⬇<span class="dl-text"> 桌面版</span></a>
     </div>
   </nav>
@@ -187,6 +190,89 @@ footer{max-width:1040px;margin:0 auto;padding:8px 20px 44px;display:flex;justify
         </div>
       </div>
     </section>
+    <!-- PDF 转 Word -->
+    <section class="tool glass" id="tool-todocx" hidden>
+      <h2>📝 PDF 转 Word</h2>
+      <p class="desc">数字版 PDF：按行/段落还原文本，保留字号层级，输出 .docx。扫描件 OCR 将在 v2.0 提供。</p>
+      <div class="grid">
+        <div class="col">
+          <div class="drop" id="docxDrop">
+            <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h6l3 3v9H5z"/><path d="M11 3v3h3"/></svg></div>
+            <b>拖入 PDF，或点击选择</b>
+            <small>文本型 PDF · 扫描件请等待 OCR</small>
+          </div>
+          <input type="file" id="docxInput" accept=".pdf" hidden>
+        </div>
+        <div class="col opts">
+          <div class="toolact">
+            <button class="btn btn-primary" id="docxGo">转换为 Word</button>
+            <span class="hint" id="docxHint"></span>
+          </div>
+          <div class="progress" id="docxProg" style="display:none;margin-top:10px"><i></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 拆分 PDF -->
+    <section class="tool glass" id="tool-split" hidden>
+      <h2>✂️ 拆分 PDF</h2>
+      <p class="desc">把一个 PDF 按页拆分为多个 PDF 文件，ZIP 打包下载。</p>
+      <div class="grid">
+        <div class="col">
+          <div class="drop" id="splitDrop">
+            <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h6l3 3v9H5z"/><path d="M11 3v3h3"/></svg></div>
+            <b>拖入 PDF，或点击选择</b>
+            <small>单文件</small>
+          </div>
+          <input type="file" id="splitInput" accept=".pdf" hidden>
+        </div>
+        <div class="col opts">
+          <div class="pgroup"><label>拆分方式</label>
+            <div class="seg" id="splitModeSeg">
+              <span class="on" data-v="each">每页一个</span>
+              <span data-v="every">每 N 页一份</span>
+            </div>
+          </div>
+          <div class="pgroup"><label>每份页数 N</label>
+            <input id="splitEvery" value="1" style="width:100%;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.55);padding:0 12px;font-size:13px;outline:none">
+          </div>
+          <div class="toolact">
+            <button class="btn btn-primary" id="splitGo">拆分并下载 ZIP</button>
+            <span class="hint" id="splitHint"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 压缩 PDF -->
+    <section class="tool glass" id="tool-compress" hidden>
+      <h2>🗜 压缩 PDF</h2>
+      <p class="desc">逐页重编码为 JPEG 图像后重建 PDF（有损）；档位越高越清晰、体积越大。文本型小文件可能不降反升。</p>
+      <div class="grid">
+        <div class="col">
+          <div class="drop" id="compDrop">
+            <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h6l3 3v9H5z"/><path d="M11 3v3h3"/></svg></div>
+            <b>拖入 PDF，或点击选择</b>
+            <small>单文件</small>
+          </div>
+          <input type="file" id="compInput" accept=".pdf" hidden>
+        </div>
+        <div class="col opts">
+          <div class="pgroup"><label>压缩档位</label>
+            <div class="seg" id="compSegWeb">
+              <span data-v="high">高质量 150</span>
+              <span class="on" data-v="standard">标准 120</span>
+              <span data-v="min">最小 96</span>
+            </div>
+          </div>
+          <div class="toolact">
+            <button class="btn btn-primary" id="compressGo">开始压缩</button>
+            <span class="hint" id="compressHint"></span>
+          </div>
+          <div class="progress" id="compProg" style="display:none;margin-top:10px"><i></i></div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <div class="install-tip">
@@ -203,6 +289,7 @@ footer{max-width:1040px;margin:0 auto;padding:8px 20px 44px;display:flex;justify
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
