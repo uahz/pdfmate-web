@@ -1,0 +1,71 @@
+/* PDFMate 渲染端 · 设计令牌与液态玻璃材质（与定稿设计一致） */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --brand-50:#EEF3FF;--brand-100:#DEE7FF;--brand-200:#C3D2FF;--brand-300:#A9BCFF;
+  --brand-500:#4F6BFF;--brand-600:#3D53E8;--brand-700:#2F3FBE;--violet:#7C5CFF;
+  --grad-brand:linear-gradient(135deg,#4F7CFF 0%,#6C5CFF 100%);
+  --pdf:#E5252A;--word:#2B6CD4;--excel:#1E9E6A;--ppt:#E8590C;--img:#8B5CF6;--merge:#0EA5E9;
+  --ok:#16A34A;--ok-bg:#E8F7EE;--run:#3D53E8;--run-bg:#E8EDFF;
+  --err:#E11D48;--err-bg:#FDEBEF;--queue:#64748B;--queue-bg:#EEF1F6;--warn:#B45309;--warn-bg:#FEF3DE;
+  --ink:#0F172A;--ink2:#475569;--ink3:#94A3B8;
+  --bg:#F4F6FB;--line:#E6EAF2;
+  --r-s:10px;--r-m:16px;--r-l:24px;
+  --sh-1:0 6px 20px rgba(15,23,42,.08);
+  --sh-2:0 16px 44px rgba(15,23,42,.16);
+}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:"Inter","HarmonyOS Sans SC","MiSans","PingFang SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,sans-serif;
+  background:#0B1226;color:var(--ink);
+  -webkit-font-smoothing:antialiased;user-select:none;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:rgba(15,23,42,.18);border-radius:99px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* 玻璃材质 */
+.glass{
+  background:rgba(255,255,255,.62);
+  -webkit-backdrop-filter:blur(20px) saturate(1.6);
+  backdrop-filter:blur(20px) saturate(1.6);
+  box-shadow:var(--sh-1),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 1px 1px rgba(255,255,255,.85);
+}
+.glass-dim{
+  background:rgba(255,255,255,.45);
+  -webkit-backdrop-filter:blur(14px) saturate(1.5);
+  backdrop-filter:blur(14px) saturate(1.5);
+  box-shadow:0 4px 14px rgba(15,23,42,.06),inset 0 0 0 1px rgba(255,255,255,.55),inset 0 1px 1px rgba(255,255,255,.75);
+}
+
+/* 品牌元件 */
+.logo{width:34px;height:34px;border-radius:10px;background:var(--grad-brand);color:#fff;font-weight:800;display:grid;place-items:center;font-size:17px;box-shadow:0 6px 16px rgba(79,107,255,.4);flex:none}
+.tile{width:36px;height:36px;border-radius:10px;color:#fff;font-weight:800;display:grid;place-items:center;font-size:13px;flex:none}
+.tile.word{background:var(--word)}.tile.excel{background:var(--excel)}.tile.ppt{background:var(--ppt)}
+.tile.pdf{background:var(--pdf);font-size:9px;letter-spacing:.4px}.tile.img{background:var(--img)}.tile.unknown{background:#64748B}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-weight:600;border-radius:12px;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--grad-brand);color:#fff;box-shadow:0 10px 24px rgba(79,107,255,.38),inset 0 1.5px 1.5px rgba(255,255,255,.5),inset 0 -2px 3px rgba(10,15,60,.22)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:rgba(255,255,255,.5);color:var(--ink2);border:1px solid rgba(255,255,255,.7);-webkit-backdrop-filter:blur(10px) saturate(1.5);backdrop-filter:blur(10px) saturate(1.5);box-shadow:0 4px 14px rgba(15,23,42,.08),inset 0 1px 1px rgba(255,255,255,.8)}
+.btn-ghost:hover{background:rgba(255,255,255,.7)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill.ok{color:var(--ok);background:var(--ok-bg)}
+.pill.run{color:var(--run);background:var(--run-bg)}
+.pill.err{color:var(--err);background:var(--err-bg)}
+.pill.queue{color:var(--queue);background:var(--queue-bg)}
+.pill.warn{color:var(--warn);background:var(--warn-bg)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.progress{height:6px;border-radius:99px;background:rgba(15,23,42,.08);overflow:hidden}
+.progress>i{display:block;height:100%;border-radius:99px;background:var(--grad-brand);transition:width .25s}
+.seg{display:flex;background:rgba(241,244,251,.6);border-radius:11px;padding:4px;gap:4px}
+.seg span{flex:1;text-align:center;padding:7px 0;border-radius:8px;font-size:13px;color:var(--ink2);cursor:pointer}
+.seg .on{background:rgba(255,255,255,.92);color:var(--brand-600);font-weight:700;box-shadow:0 2px 8px rgba(15,23,42,.1)}
+.chip{font-size:12px;padding:7px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.7);color:var(--ink2);background:rgba(255,255,255,.45);cursor:pointer}
+.chip.on{border-color:transparent;background:var(--brand-50);color:var(--brand-600);font-weight:700;box-shadow:inset 0 0 0 1.5px var(--brand-300)}
+.switch{width:40px;height:23px;border-radius:99px;background:rgba(15,23,42,.16);position:relative;flex:none;cursor:pointer}
+.switch.on{background:var(--brand-500)}
+.switch i{position:absolute;top:2.5px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:left .15s}
+.switch.on i{left:auto;right:3px}
+.link{font-size:12.5px;color:var(--brand-600);font-weight:600;cursor:pointer}
