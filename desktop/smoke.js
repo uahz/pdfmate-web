@@ -169,6 +169,50 @@ async function runSmoke({ app, queue, win }) {
     return pngs.length + ' 页 PNG + ' + path.basename(zipPath);
   });
 
+  let docxPath = null;
+  const out5 = inRoot(samplesDir, 'out5');
+  await step('PDF → Word（渲染端提取 + docx 生成）', async () => {
+    if (!mergedPath) throw new Error('缺少合并产物');
+    const bid = queue.addBatch({ mode: 'to-docx', items: [{ path: mergedPath, kind: 'pdf' }], outDir: out5, params: {} });
+    const done = await waitBatchDone(queue, bid);
+    const j = done.jobs[0];
+    if (j.status !== 'done') throw new Error(j.error);
+    docxPath = j.outPath;
+    if (!docxPath || !fs.existsSync(docxPath)) throw new Error('DOCX 未生成');
+    const buf = fs.readFileSync(docxPath);
+    if (!(buf[0] === 0x50 && buf[1] === 0x4B)) throw new Error('DOCX 不是有效 ZIP 容器');
+    if (!buf.includes(Buffer.from('word/document.xml'))) throw new Error('DOCX 缺少 word/document.xml');
+    return docxPath + '（' + buf.length + 'B）';
+  });
+
+  const out6 = inRoot(samplesDir, 'out6');
+  await step('拆分（每页一个 PDF）', async () => {
+    if (!mergedPath) throw new Error('缺少合并产物');
+    const bid = queue.addBatch({ mode: 'split', items: [{ path: mergedPath, kind: 'pdf' }], outDir: out6, params: { splitMode: 'each' } });
+    const done = await waitBatchDone(queue, bid);
+    const j = done.jobs[0];
+    if (j.status !== 'done') throw new Error(j.error);
+    const dir = path.dirname(j.outPath);
+    if (!dir.startsWith(samplesDir + path.sep)) throw new Error('路径越界');
+    const parts = fs.readdirSync(dir).filter(f => f.startsWith('smoke-merged_part')).length;
+    if (parts < 4) throw new Error('拆分份数应 ≥4，实际 ' + parts);
+    return parts + ' 份';
+  });
+
+  const out7 = inRoot(samplesDir, 'out7');
+  await step('压缩（逐页重编码）', async () => {
+    if (!mergedPath) throw new Error('缺少合并产物');
+    const before = fs.statSync(mergedPath).size;
+    const bid = queue.addBatch({ mode: 'compress', items: [{ path: mergedPath, kind: 'pdf' }], outDir: out7, params: { compressLevel: 'min' } });
+    const done = await waitBatchDone(queue, bid);
+    const j = done.jobs[0];
+    if (j.status !== 'done') throw new Error(j.error);
+    const after = fs.statSync(j.outPath).size;
+    const n = await pdfPageCount(new Uint8Array(fs.readFileSync(j.outPath)));
+    if (n !== 4) throw new Error('压缩后页数应 =4，实际 ' + n);
+    return 'size ' + before + 'B → ' + after + 'B（' + Math.round(after / before * 100) + '%）';
+  });
+
   const pass = steps.every(s => s.pass);
   return { pass, durationMs: Date.now() - t0, samplesDir, steps };
 }
