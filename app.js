@@ -68,10 +68,11 @@ function bindSeg(id, cb) {
 }
 
 // ---------- 工具页切换 ----------
+const TOOLS = ['img2pdf', 'pdf2img', 'merge', 'todocx', 'split', 'compress'];
 $$('.nav .chip[data-tool]').forEach(chip => {
   chip.addEventListener('click', () => {
     $$('.nav .chip[data-tool]').forEach(c => c.classList.toggle('on', c === chip));
-    ['img2pdf', 'pdf2img', 'merge'].forEach(id => { $('#tool-' + id).hidden = id !== chip.dataset.tool; });
+    TOOLS.forEach(id => { $('#tool-' + id).hidden = id !== chip.dataset.tool; });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 });
@@ -310,6 +311,202 @@ $('#mergeGo').onclick = async () => {
 const RELEASE = 'https://github.com/' + (window.__PDFMATE_REPO || 'uahz/pdfmate-web') + '/releases/latest';
 $('#dlDesktop').href = RELEASE;
 $('#dlDesktop2').href = RELEASE;
+
+// ---------- PDF → Word / 拆分 / 压缩（v1.3） ----------
+function cjkJoin(a, b2) {
+  const cjk = /[\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef]/;
+  return (cjk.test(a) || cjk.test(b2)) ? '' : ' ';
+}
+function extractLines(doc, pages, onProgress) {
+  return (async () => {
+    const pageLines = [];
+    for (const pageNum of pages) {
+      const page = await doc.getPage(pageNum);
+      const tc = await page.getTextContent();
+      const rows = [];
+      for (const it of tc.items) {
+        if (!it.str || !it.str.trim()) continue;
+        const x = it.transform[4], y = it.transform[5];
+        const size = Math.hypot(it.transform[2], it.transform[3]) || 12;
+        let row = rows.find(r => Math.abs(r.y - y) <= Math.max(size, r.size) * 0.5);
+        if (!row) { row = { y, size, items: [] }; rows.push(row); }
+        if (size > row.size) row.size = size;
+        row.items.push({ x, str: it.str, width: it.width || 0 });
+      }
+      rows.sort((a, b) => b.y - a.y);
+      const lines = rows.map(r => {
+        r.items.sort((a, b) => a.x - b.x);
+        let text = '', prevEnd = null;
+        for (const it of r.items) {
+          if (prevEnd !== null && it.x - prevEnd > r.size * 0.2) text += ' ';
+          text += it.str;
+          prevEnd = it.x + (it.width || it.str.length * r.size * 0.5);
+        }
+        return { size: r.size, text: text.replace(/[ \t]+/g, ' ').trim() };
+      }).filter(l => l.text);
+      pageLines.push({ pageNum, lines });
+      page.cleanup();
+      if (onProgress) onProgress(pageNum);
+    }
+    return pageLines;
+  })();
+}
+function linesToParas(pageLines) {
+  const all = [];
+  for (const p of pageLines) {
+    let prevY = null, prevSize = null;
+    for (const l of p.lines) {
+      const gap = prevY === null ? 0 : prevY - l.y;
+      all.push({ ...l, page: p.pageNum, gap, prevSize });
+      prevY = l.y; prevSize = l.size;
+    }
+  }
+  const sizes = all.map(l => l.size).slice().sort((a, b) => a - b);
+  const body = sizes.length ? sizes[Math.floor(sizes.length / 2)] : 12;
+  const paras = []; let cur = null;
+  for (const l of all) {
+    const heading = l.size >= body * 1.35;
+    const pageBreak = cur && cur.page !== l.page;
+    const bigGap = cur && !pageBreak && l.gap > Math.max(l.size, l.prevSize) * 1.6;
+    if (!cur || pageBreak || heading || bigGap) { cur = { heading, size: l.size, page: l.page, parts: [] }; paras.push(cur); }
+    cur.parts.push(l.text);
+  }
+  return paras.map(p => {
+    let text = '';
+    for (const seg of p.parts) { text = text ? text + cjkJoin(text[text.length - 1], seg[0]) + seg : seg; }
+    return { heading: p.heading, size: p.size, text };
+  });
+}
+
+// PDF → Word
+let docxFile = null;
+bindDrop($('#docxDrop'), $('#docxInput'), (files) => {
+  const f = files[0];
+  if (!f || !f.name.toLowerCase().endsWith('.pdf')) { toast('请选择 PDF 文件', '', 'err'); return; }
+  docxFile = f; $('#docxHint').textContent = f.name;
+});
+$('#docxGo').onclick = async () => {
+  if (!docxFile) { toast('暂无 PDF', '请先拖入或选择 PDF 文件'); return; }
+  const btn = $('#docxGo'); btn.disabled = true;
+  const prog = $('#docxProg'); prog.style.display = ''; prog.firstElementChild.style.width = '0%';
+  $('#docxHint').textContent = '提取文本中…';
+  try {
+    const pdfjs = await ensurePdfJs();
+    const doc = await pdfjs.getDocument({ data: new Uint8Array(await docxFile.arrayBuffer()) }).promise;
+    const pages = Array.from({ length: doc.numPages }, (_, i) => i + 1);
+    const pageLines = await extractLines(doc, pages, (p) => { prog.firstElementChild.style.width = Math.round(p / pages.length * 60) + '%'; });
+    await doc.destroy();
+    const paras = linesToParas(pageLines);
+    if (!paras.length) throw new Error('未提取到文本（可能是扫描件）');
+    $('#docxHint').textContent = '生成 Word 中…';
+    const D = window.docx;
+    const children = paras.map(p => new D.Paragraph({
+      children: [new D.TextRun({ text: p.text, size: Math.max(16, Math.round(p.size * 2)), bold: !!p.heading })],
+      spacing: { after: 160, line: 276 }
+    }));
+    const wdoc = new D.Document({ sections: [{ properties: {}, children }] });
+    const blob = await D.Packer.toBlob(wdoc);
+    const base = docxFile.name.replace(/\.pdf$/i, '');
+    saveBlob(blob, base + '.docx');
+    $('#docxHint').textContent = `已导出 ${paras.length} 个段落`;
+    toast('转换完成', base + '.docx 已下载（' + paras.length + ' 段）', 'ok');
+  } catch (e) {
+    toast('转换失败', String(e && e.message || e), 'err');
+    $('#docxHint').textContent = '';
+  }
+  btn.disabled = false;
+  setTimeout(() => { prog.style.display = 'none'; }, 1200);
+};
+
+// 拆分
+let splitFile = null, splitModeWeb = 'each';
+bindDrop($('#splitDrop'), $('#splitInput'), (files) => {
+  const f = files[0];
+  if (!f || !f.name.toLowerCase().endsWith('.pdf')) { toast('请选择 PDF 文件', '', 'err'); return; }
+  splitFile = f; $('#splitHint').textContent = f.name;
+});
+bindSeg('#splitModeSeg', v => splitModeWeb = v);
+$('#splitGo').onclick = async () => {
+  if (!splitFile) { toast('暂无 PDF', '请先拖入或选择 PDF 文件'); return; }
+  const btn = $('#splitGo'); btn.disabled = true; $('#splitHint').textContent = '拆分中…';
+  try {
+    const { PDFDocument } = PDFLib;
+    const src = await PDFDocument.load(new Uint8Array(await splitFile.arrayBuffer()));
+    const total = src.getPageCount();
+    const every = Math.max(1, parseInt($('#splitEvery').value, 10) || 1);
+    let groups = [];
+    if (splitModeWeb === 'each') groups = Array.from({ length: total }, (_, i) => [i + 1]);
+    else for (let s = 1; s <= total; s += every) { const e = Math.min(s + every - 1, total); const arr = []; for (let i = s; i <= e; i++) arr.push(i); groups.push(arr); }
+    const base = splitFile.name.replace(/\.pdf$/i, '');
+    const zip = new JSZip();
+    for (let gi = 0; gi < groups.length; gi++) {
+      const out = await PDFDocument.create();
+      (await out.copyPages(src, groups[gi].map(n => n - 1))).forEach(p => out.addPage(p));
+      const buf = await out.save();
+      zip.file(base + '_part' + String(gi + 1).padStart(2, '0') + '.pdf', buf);
+    }
+    const zipped = await zip.generateAsync({ type: 'blob' });
+    saveBlob(zipped, base + '_split.zip');
+    $('#splitHint').textContent = `已拆分为 ${groups.length} 个 PDF`;
+    toast('拆分完成', `${groups.length} 个 PDF 已打包下载`, 'ok');
+  } catch (e) {
+    toast('拆分失败', String(e && e.message || e), 'err');
+    $('#splitHint').textContent = '';
+  }
+  btn.disabled = false;
+};
+
+// 压缩
+let compFile = null, compLevel = 'standard';
+bindDrop($('#compDrop'), $('#compInput'), (files) => {
+  const f = files[0];
+  if (!f || !f.name.toLowerCase().endsWith('.pdf')) { toast('请选择 PDF 文件', '', 'err'); return; }
+  compFile = f; $('#compressHint').textContent = f.name;
+});
+bindSeg('#compSegWeb', v => compLevel = v);
+const COMP_LEVELS = { high: { dpi: 150, q: 0.75 }, standard: { dpi: 120, q: 0.6 }, min: { dpi: 96, q: 0.5 } };
+$('#compressGo').onclick = async () => {
+  if (!compFile) { toast('暂无 PDF', '请先拖入或选择 PDF 文件'); return; }
+  const btn = $('#compressGo'); btn.disabled = true;
+  const prog = $('#compProg'); prog.style.display = ''; prog.firstElementChild.style.width = '0%';
+  $('#compressHint').textContent = '压缩中…';
+  try {
+    const lv = COMP_LEVELS[compLevel] || COMP_LEVELS.standard;
+    const pdfjs = await ensurePdfJs();
+    const src = await pdfjs.getDocument({ data: new Uint8Array(await compFile.arrayBuffer()) }).promise;
+    const { PDFDocument } = PDFLib;
+    const out = await PDFDocument.create();
+    for (let i = 1; i <= src.numPages; i++) {
+      const page = await src.getPage(i);
+      const viewport = page.getViewport({ scale: lv.dpi / 72 });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.floor(viewport.width); canvas.height = Math.floor(viewport.height);
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      const jpeg = await new Promise(r => canvas.toBlob(r, 'image/jpeg', lv.q));
+      const img = await out.embedJpg(await jpeg.arrayBuffer());
+      const wpt = canvas.width * 72 / lv.dpi, hpt = canvas.height * 72 / lv.dpi;
+      const np = out.addPage([wpt, hpt]);
+      np.drawImage(img, { x: 0, y: 0, width: wpt, height: hpt });
+      canvas.width = 0; canvas.height = 0;
+      page.cleanup();
+      prog.firstElementChild.style.width = Math.round(i / src.numPages * 100) + '%';
+    }
+    await src.destroy();
+    const bytes = await out.save();
+    const base = compFile.name.replace(/\.pdf$/i, '');
+    saveBlob(new Blob([bytes], { type: 'application/pdf' }), base + '_compressed.pdf');
+    const ratio = Math.round(bytes.length / compFile.size * 100);
+    $('#compressHint').textContent = `压缩至原体积 ${ratio}%`;
+    toast('压缩完成', base + '_compressed.pdf（' + ratio + '%）已下载', 'ok');
+  } catch (e) {
+    toast('压缩失败', String(e && e.message || e), 'err');
+    $('#compressHint').textContent = '';
+  }
+  btn.disabled = false;
+  setTimeout(() => { prog.style.display = 'none'; }, 1200);
+};
 
 // ---------- PWA ----------
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
