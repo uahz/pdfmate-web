@@ -45,16 +45,18 @@ jobs:
           xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
           mkdir -p Payload
           cp -r build/Build/Products/Release-iphoneos/App.app Payload/
-          zip -qry ../PDFMate-1.0.0-ios-unsigned.ipa Payload
+          VER=$(node -p "require('../../package.json').version")
+          zip -qry "../PDFMate-$VER-ios-unsigned.ipa" Payload
 
       - uses: actions/upload-artifact@v4
         with:
           name: PDFMate-ios-ipa
-          path: ios/PDFMate-1.0.0-ios-unsigned.ipa
+          path: ios/PDFMate-*-ios-unsigned.ipa
 
       - name: Upload to release
         run: |
-          gh release upload v1.0.0 ios/PDFMate-1.0.0-ios-unsigned.ipa --clobber --repo "$GITHUB_REPOSITORY" \
-            || gh release create v1.0.0 ios/PDFMate-1.0.0-ios-unsigned.ipa -t "PDFMate v1.0.0" -n "Windows / Android / iOS installers" --repo "$GITHUB_REPOSITORY"
+          VER=$(node -p "require('./package.json').version")
+          gh release upload "v$VER" "ios/PDFMate-$VER-ios-unsigned.ipa" --clobber --repo "$GITHUB_REPOSITORY" \
+            || gh release create "v$VER" "ios/PDFMate-$VER-ios-unsigned.ipa" -t "PDFMate v$VER" -n "Windows / Android / iOS installers" --repo "$GITHUB_REPOSITORY"
         env:
           GH_TOKEN: ${{ github.token }}
