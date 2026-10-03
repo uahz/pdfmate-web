@@ -1,0 +1,125 @@
+/* ============================================================
+   PDFMate 四端设计参考 · 公共基础样式 v0.1
+   设计语言：清透蓝紫 / 玻璃质感 / 大圆角卡片 / 高信息密度
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --brand-50:#EEF3FF;--brand-100:#DEE7FF;--brand-200:#C3D2FF;--brand-300:#A9BCFF;
+  --brand-500:#4F6BFF;--brand-600:#3D53E8;--brand-700:#2F3FBE;--violet:#7C5CFF;
+  --grad-brand:linear-gradient(135deg,#4F7CFF 0%,#6C5CFF 100%);
+  --pdf:#E5252A;--word:#2B6CD4;--excel:#1E9E6A;--ppt:#E8590C;--img:#8B5CF6;--merge:#0EA5E9;
+  --ok:#16A34A;--ok-bg:#E8F7EE;--run:#3D53E8;--run-bg:#E8EDFF;
+  --err:#E11D48;--err-bg:#FDEBEF;--queue:#64748B;--queue-bg:#EEF1F6;--warn:#B45309;--warn-bg:#FEF3DE;
+  --ink:#0F172A;--ink2:#475569;--ink3:#94A3B8;
+  --bg:#F4F6FB;--card:#FFFFFF;--line:#E6EAF2;
+  --r-s:10px;--r-m:16px;--r-l:24px;
+  --sh-1:0 6px 20px rgba(15,23,42,.06);--sh-2:0 16px 44px rgba(15,23,42,.14);
+}
+html,body{height:100%}
+body{
+  font-family:"Inter","HarmonyOS Sans SC","MiSans","PingFang SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--ink);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+a{color:inherit;text-decoration:none}
+
+/* ---------- 展示舞台（风格评审页外框） ---------- */
+.stage{min-height:100vh;padding:52px 48px 56px;display:flex;flex-direction:column;align-items:center;gap:34px}
+.stage.dark{
+  background:#0B1226;
+  background-image:
+    radial-gradient(900px 480px at 12% -10%,rgba(79,124,255,.22),transparent 60%),
+    radial-gradient(900px 520px at 88% 0%,rgba(124,92,255,.18),transparent 60%),
+    radial-gradient(700px 500px at 50% 115%,rgba(14,165,233,.12),transparent 60%),
+    radial-gradient(1300px 700px at 50% 58%,rgba(93,120,255,.20),transparent 65%),
+    radial-gradient(600px 400px at 8% 95%,rgba(124,92,255,.14),transparent 65%);
+}
+.stage.light{
+  background:#EDF1FA;
+  background-image:
+    radial-gradient(820px 460px at 8% -6%,rgba(79,124,255,.15),transparent 60%),
+    radial-gradient(820px 480px at 92% -4%,rgba(124,92,255,.13),transparent 60%);
+}
+.stage-head{width:100%;max-width:1520px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.stage-head h1{font-size:25px;letter-spacing:.5px}
+.stage.dark .stage-head h1{color:#F1F5FF}
+.stage-head p{margin-top:8px;font-size:13.5px;color:var(--ink3)}
+.stage.dark .stage-head p{color:#8FA0C9}
+.back{font-size:13px;padding:8px 14px;border-radius:999px;border:1px solid rgba(148,163,184,.35);color:#8FA0C9;white-space:nowrap}
+.stage.light .back{color:var(--ink2);border-color:var(--line);background:#fff}
+.stage-note{font-size:12.5px;color:#7488B4;letter-spacing:.3px}
+.stage.light .stage-note{color:var(--ink3)}
+
+/* ---------- 品牌元件 ---------- */
+.logo{width:34px;height:34px;border-radius:10px;background:var(--grad-brand);color:#fff;font-weight:800;display:grid;place-items:center;font-size:17px;box-shadow:0 6px 16px rgba(79,107,255,.4);flex:none}
+.tile{width:42px;height:42px;border-radius:12px;color:#fff;font-weight:800;display:grid;place-items:center;flex:none}
+.tile.sm{width:34px;height:34px;border-radius:10px;font-size:13px}
+.tile.word{background:var(--word)}
+.tile.excel{background:var(--excel)}
+.tile.ppt{background:var(--ppt)}
+.tile.pdf{background:var(--pdf);font-size:10.5px;letter-spacing:.4px}
+.tile.img{background:var(--img)}
+.tile.merge{background:var(--merge)}
+.tile.more{background:#334155;font-size:15px;letter-spacing:1px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:default;font-weight:600;border-radius:12px;white-space:nowrap}
+.btn-primary{background:var(--grad-brand);color:#fff;box-shadow:0 10px 24px rgba(79,107,255,.38),inset 0 1.5px 1.5px rgba(255,255,255,.5),inset 0 -2px 3px rgba(10,15,60,.22)}
+.btn-ghost{background:rgba(255,255,255,.5);color:var(--ink2);border:1px solid rgba(255,255,255,.7);-webkit-backdrop-filter:blur(10px) saturate(1.5);backdrop-filter:blur(10px) saturate(1.5);box-shadow:0 4px 14px rgba(15,23,42,.08),inset 0 1px 1px rgba(255,255,255,.8)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill.ok{color:var(--ok);background:var(--ok-bg)}
+.pill.run{color:var(--run);background:var(--run-bg)}
+.pill.err{color:var(--err);background:var(--err-bg)}
+.pill.queue{color:var(--queue);background:var(--queue-bg)}
+.pill.warn{color:var(--warn);background:var(--warn-bg)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.progress{height:6px;border-radius:99px;background:rgba(15,23,42,.08);overflow:hidden}
+.progress>i{display:block;height:100%;border-radius:99px;background:var(--grad-brand)}
+.seg{display:flex;background:rgba(241,244,251,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:11px;padding:4px;gap:4px}
+.seg span{flex:1;text-align:center;padding:7px 0;border-radius:8px;font-size:13px;color:var(--ink2)}
+.seg .on{background:rgba(255,255,255,.92);color:var(--brand-600);font-weight:700;box-shadow:0 2px 8px rgba(15,23,42,.08)}
+.switch{width:40px;height:23px;border-radius:99px;background:#DDE3F0;position:relative;flex:none}
+.switch.on{background:var(--brand-500)}
+.switch i{position:absolute;top:2.5px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.switch.on i{left:auto;right:3px}
+
+/* ---------- 手机机身（iOS / Android 共用） ---------- */
+.phone{width:352px;height:762px;background:#0B0F1A;border-radius:56px;padding:11px;position:relative;flex:none;
+  box-shadow:0 34px 90px rgba(8,14,40,.45),inset 0 0 0 2px rgba(255,255,255,.07)}
+.phone .screen{width:100%;height:100%;border-radius:46px;overflow:hidden;background:#F5F6FA;position:relative}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:112px;height:31px;background:#000;border-radius:20px;z-index:60}
+.punch{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:13px;height:13px;background:#000;border-radius:50%;z-index:60}
+.statusbar{display:flex;justify-content:space-between;align-items:center;padding:15px 26px 4px;font-size:14px;font-weight:700;position:relative;z-index:50}
+.sicons{display:flex;align-items:center;gap:6px}
+.sig{display:flex;align-items:flex-end;gap:1.5px}
+.sig i{width:3px;background:currentColor;border-radius:1px}
+.sig i:nth-child(1){height:4px}.sig i:nth-child(2){height:6px}.sig i:nth-child(3){height:8px}.sig i:nth-child(4){height:10px}
+.batt{width:23px;height:11.5px;border:1.5px solid currentColor;border-radius:3.5px;position:relative;opacity:.95}
+.batt::before{content:'';position:absolute;top:1.5px;bottom:1.5px;left:1.5px;right:6px;background:currentColor;border-radius:1px}
+.batt::after{content:'';position:absolute;right:-4.5px;top:3px;width:2px;height:5px;background:currentColor;border-radius:1px}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:126px;height:5px;border-radius:99px;background:#111;opacity:.9;z-index:60}
+
+/* ---------- 液态玻璃材质（Liquid Glass，参照 Kyant0/AndroidLiquidGlass 的 lens 效果） ----------
+   顺序：颜色滤镜 ⇒ 轻微模糊 ⇒ 透镜折射（SVG 位移贴图）。
+   特征：中心通透清晰、背景在玻璃边缘被折射弯曲、顶缘镜面高光、玻璃厚度暗线。 */
+.lglass{
+  position:relative;
+  background:linear-gradient(135deg,rgba(255,255,255,.36) 0%,rgba(255,255,255,.16) 45%,rgba(255,255,255,.24) 100%);
+  -webkit-backdrop-filter:blur(6px) saturate(1.7);
+  backdrop-filter:blur(6px) saturate(1.7);
+  backdrop-filter:blur(2.2px) saturate(1.7) brightness(1.05) url(#lgl);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.38),
+    inset 0 1.5px 1.5px rgba(255,255,255,.88),
+    inset 0 -1.5px 2px rgba(255,255,255,.30),
+    inset 0 -3px 4px rgba(15,23,42,.06),
+    0 18px 44px rgba(10,18,45,.25),0 4px 12px rgba(10,18,45,.10);
+}
+.lglass::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.08) 24%,rgba(255,255,255,0) 42%,rgba(255,255,255,0) 74%,rgba(255,255,255,.2) 100%)}
+.lglass>*{position:relative;z-index:1}
+.lglass.dark{
+  background:linear-gradient(135deg,rgba(38,36,46,.55) 0%,rgba(20,19,26,.45) 100%);
+  box-shadow:0 18px 40px rgba(8,8,14,.45),0 3px 10px rgba(8,8,14,.2),
+    inset 0 0 0 1px rgba(255,255,255,.22),
+    inset 0 1.2px 1.2px rgba(255,255,255,.32),
+    inset 0 -1px 1.5px rgba(255,255,255,.10);
+}
