@@ -26,8 +26,12 @@ jobs:
           cp -r icons www/icons
           npm install --no-audit --no-fund
           npx cap add ios
-          npx @capacitor/assets generate --ios --assetPath assets
           npx cap sync ios
+
+      - name: Brand AppIcon (overwrite template pair)
+        run: |
+          cp "assets/ios/AppIcon60x60@2x.png" "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon60x60@2x.png"
+          cp "assets/ios/AppIcon76x76@2x~ipad.png" "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon76x76@2x~ipad.png"
 
       - name: CocoaPods install
         run: |
