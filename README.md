@@ -13,16 +13,16 @@ PDF 全格式转换工具 · Windows 桌面端 + Web + Android + iOS · **全程
 | `desktop/` | **Windows 桌面端**（Electron）：Word/Excel/PPT→PDF、图片→PDF、PDF→图片、多格式合并、批量队列、双引擎（LibreOffice / MS Office COM） |
 | `design/` | 四端设计风格参考稿（PC / Web / iOS / Android，高保真 HTML） |
 
-## 下载安装（v1.0.0）
+## 下载安装（v1.3.0）
 
 前往 **[Releases](https://github.com/uahz/pdfmate-web/releases/latest)**：
 
 | 平台 | 文件 | 安装方式 |
 |---|---|---|
-| Windows | `PDFMate Setup 1.0.0.exe` | 双击安装 |
-| Windows（便携） | `PDFMate 1.0.0.exe` | 双击直接运行 |
-| Android | `PDFMate-1.0.0-android.apk` | 下载安装，允许「未知来源应用」 |
-| iOS | `PDFMate-1.0.0-ios-unsigned.ipa` | 未签名包，用 AltStore / Sideloadly + Apple ID 自签后安装（需开发者证书可走 `ios-signed.yml` 出签名包） |
+| Windows | `PDFMate Setup 1.3.0.exe` | 双击安装（含资源管理器右键菜单） |
+| Windows（便携） | `PDFMate 1.3.0.exe` | 双击直接运行 |
+| Android | `PDFMate-1.3.0-android.apk` | 下载安装，允许「未知来源应用」 |
+| iOS | `PDFMate-1.3.0-ios-unsigned.ipa` | 未签名包，用 AltStore / Sideloadly + Apple ID 自签后安装（需开发者证书可走 `ios-signed.yml` 出签名包） |
 
 ## 桌面端开发
 
